@@ -12,13 +12,17 @@ Features:
 [11] node ./sort.js -r fileName
 [12] cat fileName | node ./sort.js on number
 
-==> node ./sort.js fileName1,fileName2,...
-==> cat fileName1,fileName2,... | node ./sort.js
-==> node ./sort.js fileName -o outputFileName
-==> cat filename | node ./sort.js
-==> node ./sort.js 
-==> node ./sort.js -n 
-==> node ./sort.js -n -r
-==> node ./sort.js -r
-==> node ./sort.js -t ',' -k 2
-==> node ./sort.js -k 2 
+-----------------------
+v0.1
+  node ./sort.js -k 2 fileName 
+    -->Create Files and directories :
+        directories: src , test , appTests
+        files : sort.js , src/sortLib.js , test/testSortLib.js
+    -->Check Connections : mocha , nyc 
+    -->Modules : chai
+    -->npm init
+
+Tasks : 
+-->sort Content based by given field
+-->get The content of fileName
+-->parse user options
