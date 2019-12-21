@@ -1,0 +1,24 @@
+Features:
+01) node ./sort.js -n fileName
+02) cat fileName | node ./sort.js on number
+03) node ./sort.js -n -r fileName
+04) cat fileName | node ./sort.js on number
+05) node ./sort.js fileName
+06) cat fileName | node ./sort.js on number
+07) node ./sort.js -r fileName
+08) cat fileName | node ./sort.js on number
+
+==> node ./sort.js fileName1,fileName2,...
+==> cat fileName1,fileName2,... | node ./sort.js
+==> node ./sort.js fileName -o outputFileName
+==> cat filename | node ./sort.js
+==> node ./sort.js -t ',' -k 2 fileName
+==> cat fileName | node ./sort.js -t ',' -k 2 fileName
+==> node ./sort.js -k 2 fileName 
+==> cat fileName | node ./sort.js -k 2 fileName 
+==> node ./sort.js 
+==> node ./sort.js -n 
+==> node ./sort.js -n -r
+==> node ./sort.js -r
+==> node ./sort.js -t ',' -k 2
+==> node ./sort.js -k 2 
