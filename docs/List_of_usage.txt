@@ -1,0 +1,68 @@
+<== List Of Usage ==>
+
+1. standard Input
+  A. sort <cr> 
+    ==> gives you sorted after you press <ctrl+d>
+    
+  B. sort -n <cr>
+    ==> gives you numerically sorted after you press <ctrl+d>
+    
+  C. sort -r <cr>
+    ==> gives you reversly sorted after you press <ctrl+d>
+    
+  D. sort -t '{fieldSeperator}' -{option}k{fieldNumber}
+    ==> gives you sorted by given option,at given no.of field seperated by given fieldSeperator after you press <ctrl+d>
+
+  E. sort -o outputFileName
+    ==> writes the output to the output file instead of the standard output after you press <ctrl+d>
+
+2. fileInput
+  A. sort fileNames<cr> 
+    ==> gives you sortedData of given files
+    
+  B. sort -n fileNames<cr>
+    ==> gives you numerically sortedData of given files
+    
+  C. sort -r fileNames<cr>
+    ==> gives you reversly sortedData of given files
+    
+  D. sort -t '{fieldSeperator}' -{option}k{fieldNumber} fileNames
+    ==> gives you sortedData of given files by given option,at given no.of field seperated by given fieldSeperator
+    
+  E. sort -o fileNames outputFileName
+    ==> writes the output to the output file instead of the standard output
+
+
+3. standardInput by piping
+  A. cat/bat fileNames | sort <cr> 
+    ==> gives you sortedData of pipes input
+    
+  B. cat/bat fileNames | sort -n <cr>
+    ==> gives you numerically sortedData of pipes input
+    
+  C. cat/bat fileNames | sort -r <cr>
+    ==> gives you reversly sortedData of pipes input
+    
+  D. cat/bat fileNames | sort -t '{fieldSeperator}' -{option}k{fieldNumber}
+    ==> gives you sortedData of pipes input by given option,at given no.of field seperated by given fieldSeperator
+    
+  E. cat/bat fileNames | sort -o outputFileName
+    ==> writes the output to the output file instead of the standard output
+
+
+
+<== I Want to build ==>
+
+  2. fileInput
+    A. sort fileNames<cr> 
+     ==> gives you sortedData of given files
+    
+    B. sort -n fileNames<cr>
+     ==> gives you numerically sortedData of given files
+    
+    C. sort -r fileNames<cr>
+      ==> gives you reversly sortedData of given files
+    
+    D. sort -o outputFileName
+      ==> writes the output to the output file instead of the standard output
+      
