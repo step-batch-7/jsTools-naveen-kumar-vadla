@@ -20,5 +20,9 @@
   "bugs": {
     "url": "https://github.com/step-batch-7/jsTools-naveen-kumar-vadla/issues"
   },
-  "homepage": "https://github.com/step-batch-7/jsTools-naveen-kumar-vadla#readme"
+  "homepage": "https://github.com/step-batch-7/jsTools-naveen-kumar-vadla#readme",
+  "devDependencies": {
+    "mocha": "^6.2.2",
+    "nyc": "^14.1.1"
+  }
 }

@@ -18,9 +18,9 @@ v0.1
     -->Create Files and directories :
         directories: src , test , appTests
         files : sort.js , src/sortLib.js , test/testSortLib.js
+    -->npm init
     -->Check Connections : mocha , nyc 
     -->Modules : chai
-    -->npm init
 
 Tasks : 
 -->sort Content based by given field
