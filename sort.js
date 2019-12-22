@@ -1,9 +1,20 @@
 "use strict";
 
 const { performAction } = require("./src/sortLib");
+const {
+	isFilePresent,
+	readFromFile,
+	writeIntoFile
+} = require("./src/utilitiesLib");
 
 const main = userArgs => {
-	const sortedData = performAction(userArgs);
+	const argsObjecs = {
+		userArgs,
+		isFilePresent,
+		readFromFile,
+		writeIntoFile
+	};
+	const sortedData = performAction(argsObjecs);
 	console.log(sortedData.join("\n"));
 };
 

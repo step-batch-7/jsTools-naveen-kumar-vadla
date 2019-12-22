@@ -1,0 +1,2 @@
+node ./sort.js -k 1 badFile.txt
+sort: No such file or directory

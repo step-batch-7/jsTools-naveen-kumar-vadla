@@ -1,22 +1,13 @@
 "use strict";
 
-const fs = require("fs");
-
 const sortContent = fileContentWithOptions => {
 	let sortedContent = [];
-	const options = fileContentWithOptions.options;
-	const fileContent = fileContentWithOptions.content;
-	const delimiter = fileContentWithOptions.delimiter || " ";
+	const { options, fileContent, delimiter } = fileContentWithOptions;
 	if (!options.includes("-k")) {
 		return sortedContent;
 	}
-	let { formattedContent, keys } = formatFileContent(
-		fileContent,
-		delimiter,
-		options
-	);
-
-	keys = keys.sort();
+	const formattedContent = formatFileContent(fileContent, delimiter, options);
+	const keys = Object.keys(formattedContent).sort();
 
 	for (let index = 0; index < keys.length; index++) {
 		sortedContent.push(formattedContent[keys[index]]);
@@ -26,28 +17,41 @@ const sortContent = fileContentWithOptions => {
 };
 
 const formatFileContent = (fileContent, delimiter, options) => {
-	let formattedContent = {};
-	const keys = fileContent.map(line => {
-		const array = line.split(delimiter);
-		return array[options[1] - 1];
+	const formattedContent = {};
+	fileContent.forEach(line => {
+		const key = line.split(delimiter)[options[1] - 1];
+		formattedContent[key] = line;
 	});
-	fileContent.forEach((line, i) => {
-		formattedContent[keys[i]] = line;
-	});
-	return { formattedContent, keys };
+	return formattedContent;
 };
 
 const parseUserOptions = userOptions => {
 	const fileName = userOptions[userOptions.length - 1];
-	const options = userOptions.slice(0, -1);
-	return { fileName, options };
+	const optionKIndex = userOptions.indexOf("-k");
+	const options = userOptions.slice(optionKIndex, optionKIndex + 2);
+	const delimiter = userOptions[-1] || " ";
+	return { fileName, options, delimiter };
 };
 
-const performAction = userArgs => {
-	const { fileName, options } = parseUserOptions(userArgs);
-	const content = fs.readFileSync(fileName, "utf-8").split("\n");
-	const sortedData = sortContent({ options: options, content: content });
+const performAction = args => {
+	const { userArgs, readFromFile, isFilePresent, writeIntoFile } = args;
+	const { fileName, options, delimiter } = parseUserOptions(userArgs);
+	if (!isFilePresent(fileName)) {
+		return generateErrorMessage({
+			cmd: `sort`,
+			msg: `No such file or directory`
+		});
+	}
+	const fileContent = readFromFile(fileName).split("\n");
+	const fileContentWithOptions = { options, fileContent, delimiter };
+	const sortedData = sortContent(fileContentWithOptions);
 	return sortedData;
+};
+
+const generateErrorMessage = error => {
+	const cmd = error.cmd;
+	const msg = error.msg;
+	return [`${cmd}: ${msg}`];
 };
 
 module.exports = {

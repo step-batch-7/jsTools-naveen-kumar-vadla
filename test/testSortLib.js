@@ -12,7 +12,7 @@ describe("sortContent", () => {
 	it("Should give sorted form of given fileContent with options delimeter ' '", () => {
 		const fileContentWithOptions = {
 			options: ["-k", "3"],
-			content: ["j 5 z", "i 4 y", "h 3 x", "g 2 w", "f 1 v"],
+			fileContent: ["j 5 z", "i 4 y", "h 3 x", "g 2 w", "f 1 v"],
 			delimiter: " "
 		};
 		const actual = sortContent(fileContentWithOptions);
@@ -30,16 +30,23 @@ describe("parseUserOptions", () => {
 		const actual = parseUserOptions(["-k", "1", "./docs/sampleFile.txt"]);
 		const expected = {
 			fileName: "./docs/sampleFile.txt",
-			options: ["-k", "1"]
+			options: ["-k", "1"],
+			delimiter: " "
 		};
 		assert.deepStrictEqual(actual, expected);
 	});
 });
 
 describe("performAction", () => {
-	it("Should give sorted Data of given File", () => {
-		const userOptions = ["-k", "1", "./docs/sampleFile.txt"];
-		const actual = performAction(userOptions);
+	it("Should give sorted Data of given File if exists", () => {
+		const userArgs = ["-k", "1", "./docs/sampleFile.txt"];
+		const readFromFile = fileName => {
+			return "a 9\nb 8\nc 7\nd 6\ne 5\nf 4\ng 3\nh 2\ni 1\n9 a\n8 b\n7 c\n6 d\n5 e\n4 f\n3 g\n2 h\n1 i";
+		};
+		const isFilePresent = filePath => {
+			return true;
+		};
+		const actual = performAction({ userArgs, readFromFile, isFilePresent });
 		const expected = [
 			"1 i",
 			"2 h",
@@ -60,6 +67,19 @@ describe("performAction", () => {
 			"h 2",
 			"i 1"
 		];
+		assert.deepStrictEqual(actual, expected);
+	});
+
+	it("Should give error message if file doesn't exist", () => {
+		const userArgs = ["-k", "1", "./docs/sampleFile.txt"];
+		const readFromFile = fileName => {
+			return "a 9\nb 8\nc 7\nd 6\ne 5\nf 4\ng 3\nh 2\ni 1\n9 a\n8 b\n7 c\n6 d\n5 e\n4 f\n3 g\n2 h\n1 i";
+		};
+		const isFilePresent = filePath => {
+			return false;
+		};
+		const actual = performAction({ userArgs, readFromFile, isFilePresent });
+		const expected = [`sort: No such file or directory`];
 		assert.deepStrictEqual(actual, expected);
 	});
 });
