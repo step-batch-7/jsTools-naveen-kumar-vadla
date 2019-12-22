@@ -7,11 +7,12 @@ const sortContent = fileContentWithOptions => {
 		return sortedContent;
 	}
 	const formattedContent = formatFileContent(fileContent, delimiter, options);
-	const keys = Object.keys(formattedContent).sort();
+	const keys = Object.keys(formattedContent);
+	keys.sort();
 
-	for (let index = 0; index < keys.length; index++) {
-		sortedContent.push(formattedContent[keys[index]]);
-	}
+	keys.forEach(key => {
+		sortedContent.push(...formattedContent[key].sort());
+	});
 
 	return sortedContent;
 };
@@ -19,8 +20,13 @@ const sortContent = fileContentWithOptions => {
 const formatFileContent = (fileContent, delimiter, options) => {
 	const formattedContent = {};
 	fileContent.forEach(line => {
+		const allKeys = Object.keys(formattedContent);
 		const key = line.split(delimiter)[options[1] - 1];
-		formattedContent[key] = line;
+		if (allKeys.includes(key)) {
+			formattedContent[key].push(line);
+		} else {
+			formattedContent[key] = [line];
+		}
 	});
 	return formattedContent;
 };
@@ -34,7 +40,7 @@ const parseUserOptions = userOptions => {
 };
 
 const performAction = args => {
-	const { userArgs, readFromFile, isFilePresent, writeIntoFile } = args;
+	const { userArgs, readFromFile, isFilePresent } = args;
 	const { fileName, options, delimiter } = parseUserOptions(userArgs);
 	if (!isFilePresent(fileName)) {
 		return generateErrorMessage({
