@@ -1,31 +1,20 @@
 "use strict";
 
-const {
-	sortContent,
-	parseUserOptions,
-	generateErrorMessage
-} = require("./sortLib");
+const { sortContent, parseUserOptions } = require("./sortLib");
 
-const performSortOperations = args => {
-	const { userArgs, readFromFile, isFilePresent } = args;
+const performSortOperations = argsObj => {
+	const { userArgs, readFromFile, isFilePresent } = argsObj;
 	const { fileName, options, delimiter } = parseUserOptions(userArgs);
-	if (isNaN(+options[1]) || !(options[1] > 0)) {
-		const error = generateErrorMessage({
-			cmd: `sort`,
-			msg: `-k ${options[1]}: Invalid argument`
-		});
-		return { error: error };
-	}
-	if (!isFilePresent(fileName)) {
-		const error = generateErrorMessage({
-			cmd: `sort`,
-			msg: `No such file or directory`
-		});
-		return { error: error };
-	}
+
+	if (isNaN(+options[1]) || !(options[1] > 0))
+		return { error: `sort: -k ${options[1]}: Invalid argument` };
+	if (!isFilePresent(fileName))
+		return { error: `sort: No such file or directory` };
+
 	const fileContent = readFromFile(fileName).split("\n");
 	const fileContentWithOptions = { options, fileContent, delimiter };
 	const sortedData = sortContent(fileContentWithOptions);
+
 	return { sortedData: sortedData.join("\n") };
 };
 

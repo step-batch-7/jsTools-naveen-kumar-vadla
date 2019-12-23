@@ -6,7 +6,7 @@ const {
 	sortContent,
 	formatFileContent,
 	parseUserOptions,
-	generateErrorMessage
+	sortByFields
 } = require("../src/sortLib");
 
 describe("sortContent", () => {
@@ -48,7 +48,7 @@ describe("sortContent", () => {
 });
 
 describe("parseUserOptions", () => {
-	it("Should parsed User Options", () => {
+	it("Should give parsed User Options", () => {
 		const actual = parseUserOptions(["-k", "1", "./docs/sampleFile.txt"]);
 		const expected = {
 			fileName: "./docs/sampleFile.txt",
@@ -56,16 +56,5 @@ describe("parseUserOptions", () => {
 			delimiter: " "
 		};
 		assert.deepStrictEqual(actual, expected);
-	});
-});
-
-describe("generateErrorMessage", () => {
-	it("Should give generated error message", () => {
-		const actual = generateErrorMessage({
-			cmd: "sort",
-			msg: "No such file or directory"
-		});
-		const expected = `sort: No such file or directory`;
-		assert.strictEqual(actual, expected);
 	});
 });
