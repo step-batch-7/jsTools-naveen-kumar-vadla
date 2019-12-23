@@ -7,7 +7,7 @@ const readFromFile = function(filepath) {
 };
 
 const writeIntoFile = function(filepath, data) {
-	fs.writeFileSync(filepath, data);
+	fs.writeFileSync(filepath, data, "utf8");
 };
 
 const isFilePresent = function(filepath) {
