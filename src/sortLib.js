@@ -42,9 +42,9 @@ const sortContent = fileContentWithOptions => {
 };
 
 const parseUserOptions = userOptions => {
-	const fileName = userOptions[userOptions.length - 1];
 	const optKIdx = userOptions.indexOf("-k");
-	const options = userOptions.slice(optKIdx, optKIdx + 2);
+	const options = userOptions.splice(optKIdx, 2);
+	const fileName = userOptions[userOptions.length - 1];
 	const delimiter = " ";
 	return { fileName, options, delimiter };
 };
