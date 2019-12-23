@@ -9,6 +9,13 @@ const {
 const performSortOperations = args => {
 	const { userArgs, readFromFile, isFilePresent } = args;
 	const { fileName, options, delimiter } = parseUserOptions(userArgs);
+	if (isNaN(+options[1])) {
+		const error = generateErrorMessage({
+			cmd: `sort`,
+			msg: `-k ${options[1]}: Invalid argument`
+		});
+		return { error: error };
+	}
 	if (!isFilePresent(fileName)) {
 		const error = generateErrorMessage({
 			cmd: `sort`,

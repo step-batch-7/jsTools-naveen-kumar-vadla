@@ -7,8 +7,7 @@ const sortContent = fileContentWithOptions => {
 		return sortedContent;
 	}
 	const formattedContent = formatFileContent(fileContent, delimiter, options);
-	const keys = Object.keys(formattedContent);
-	keys.sort();
+	const keys = Object.keys(formattedContent).sort();
 
 	keys.forEach(key => {
 		sortedContent.push(...formattedContent[key].sort());

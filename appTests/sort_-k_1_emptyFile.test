@@ -1,1 +1,1 @@
-(node ./sort.js ./docs/emptyFile.txt)
+(node ./sort.js -k 1 ./docs/emptyFile.txt)
