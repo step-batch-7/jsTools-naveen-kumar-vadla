@@ -47,8 +47,35 @@ describe("performAction", () => {
 			return true;
 		};
 		const actual = performAction({ userArgs, readFromFile, isFilePresent });
-		const expected =
-			"1 i\n2 h\n3 g\n4 f\n5 e\n6 d\n7 c\n8 b\n9 a\na 9\na b\nb 8\nb c\nc 7\nc d\nd 6\nd e\ne 5\ne f\nf 4\nf g\ng 3\ng h\nh 2\nh i\ni 1\ni j";
+		const expected = [
+			"1 i",
+			"2 h",
+			"3 g",
+			"4 f",
+			"5 e",
+			"6 d",
+			"7 c",
+			"8 b",
+			"9 a",
+			"a 9",
+			"a b",
+			"b 8",
+			"b c",
+			"c 7",
+			"c d",
+			"d 6",
+			"d e",
+			"e 5",
+			"e f",
+			"f 4",
+			"f g",
+			"g 3",
+			"g h",
+			"h 2",
+			"h i",
+			"i 1",
+			"i j"
+		];
 		assert.deepStrictEqual(actual, expected);
 	});
 
@@ -61,7 +88,7 @@ describe("performAction", () => {
 			return false;
 		};
 		const actual = performAction({ userArgs, readFromFile, isFilePresent });
-		const expected = `sort: No such file or directory`;
+		const expected = [`sort: No such file or directory`];
 		assert.deepStrictEqual(actual, expected);
 	});
 
@@ -74,6 +101,6 @@ describe("performAction", () => {
 			return true;
 		};
 		const actual = performAction({ userArgs, readFromFile, isFilePresent });
-		assert.deepStrictEqual(actual, "");
+		assert.deepStrictEqual(actual, [""]);
 	});
 });

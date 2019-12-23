@@ -15,7 +15,7 @@ const main = userArgs => {
 		writeIntoFile
 	};
 	const sortedData = performAction(argsObjecs);
-	console.log(sortedData);
+	console.log(sortedData.join("\n"));
 };
 
 main(process.argv.slice(2));

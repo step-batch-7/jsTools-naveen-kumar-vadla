@@ -51,13 +51,13 @@ const performAction = args => {
 	const fileContent = readFromFile(fileName).split("\n");
 	const fileContentWithOptions = { options, fileContent, delimiter };
 	const sortedData = sortContent(fileContentWithOptions);
-	return sortedData.join("\n");
+	return sortedData;
 };
 
 const generateErrorMessage = error => {
 	const cmd = error.cmd;
 	const msg = error.msg;
-	return `${cmd}: ${msg}`;
+	return [`${cmd}: ${msg}`];
 };
 
 module.exports = {
