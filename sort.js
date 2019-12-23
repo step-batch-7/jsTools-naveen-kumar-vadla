@@ -16,8 +16,9 @@ const main = userArgs => {
 		readFromFile,
 		writeIntoFile
 	};
-	const sortedData = performSortOperations(argsObjecs);
-	stdout.write(sortedData);
+	const result = performSortOperations(argsObjecs);
+	result.sortedData && stdout.write(result.sortedData);
+	result.error && stderr.write(result.error);
 };
 
 main(process.argv.slice(2));
