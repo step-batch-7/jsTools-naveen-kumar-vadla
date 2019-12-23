@@ -93,4 +93,23 @@ describe("performSortOperations", () => {
 		};
 		assert.deepStrictEqual(actual, expected);
 	});
+
+	it("Should give error message for negative value for -k", () => {
+		const userArgs = ["-k", "-5", "./docs/sampleFile.txt"];
+		const readFromFile = fileName => {
+			return "j 5 z\ni 4 y\nh 3 x\ng 2 w\nf 1 v";
+		};
+		const isFilePresent = filePath => {
+			return true;
+		};
+		const actual = performSortOperations({
+			userArgs,
+			readFromFile,
+			isFilePresent
+		});
+		const expected = {
+			error: `sort: -k -5: Invalid argument`
+		};
+		assert.deepStrictEqual(actual, expected);
+	});
 });
