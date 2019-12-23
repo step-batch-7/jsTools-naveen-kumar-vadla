@@ -11,7 +11,7 @@ runTest() {
   then
     result="✅"
   else
-    result="🚫"
+    result="❌"
     echo "---------$test----------" >> failures.txt
     echo "\t\t\t<= command =>\n$command" >> failures.txt
     echo "\n\t\t\t<= actual output =>" >> failures.txt
@@ -20,7 +20,7 @@ runTest() {
     cat expected.txt >> failures.txt
   fi
   rm -f output.txt expected.txt
-  echo "$x $result $test"
+  echo "$result $test"
 }
 echo "running $# tests"
 echo "----- starting  ---------"

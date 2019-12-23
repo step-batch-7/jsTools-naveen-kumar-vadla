@@ -35,34 +35,17 @@ const parseUserOptions = userOptions => {
 	const fileName = userOptions[userOptions.length - 1];
 	const optionKIndex = userOptions.indexOf("-k");
 	const options = userOptions.slice(optionKIndex, optionKIndex + 2);
-	const delimiter = userOptions[-1] || " ";
+	const delimiter = " ";
 	return { fileName, options, delimiter };
 };
 
-const performAction = args => {
-	const { userArgs, readFromFile, isFilePresent } = args;
-	const { fileName, options, delimiter } = parseUserOptions(userArgs);
-	if (!isFilePresent(fileName)) {
-		return generateErrorMessage({
-			cmd: `sort`,
-			msg: `No such file or directory`
-		});
-	}
-	const fileContent = readFromFile(fileName).split("\n");
-	const fileContentWithOptions = { options, fileContent, delimiter };
-	const sortedData = sortContent(fileContentWithOptions);
-	return sortedData;
-};
-
 const generateErrorMessage = error => {
-	const cmd = error.cmd;
-	const msg = error.msg;
-	return [`${cmd}: ${msg}`];
+	return `${error.cmd}: ${error.msg}`;
 };
 
 module.exports = {
 	sortContent,
 	formatFileContent,
 	parseUserOptions,
-	performAction
+	generateErrorMessage
 };

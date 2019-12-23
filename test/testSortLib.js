@@ -2,11 +2,9 @@
 
 const { assert } = require("chai");
 
-const {
-	sortContent,
-	parseUserOptions,
-	performAction
-} = require("../src/sortLib");
+const { sortContent, parseUserOptions } = require("../src/sortLib");
+
+const { performSortOperations } = require("../src/performSortOperations");
 
 describe("sortContent", () => {
 	it("Should give sorted form of given fileContent with options delimeter ' '", () => {
@@ -37,7 +35,7 @@ describe("parseUserOptions", () => {
 	});
 });
 
-describe("performAction", () => {
+describe("performSortOperations", () => {
 	it("Should give sorted Data of given File if exists", () => {
 		const userArgs = ["-k", "1", "./docs/sampleFile.txt"];
 		const readFromFile = fileName => {
@@ -46,36 +44,13 @@ describe("performAction", () => {
 		const isFilePresent = filePath => {
 			return true;
 		};
-		const actual = performAction({ userArgs, readFromFile, isFilePresent });
-		const expected = [
-			"1 i",
-			"2 h",
-			"3 g",
-			"4 f",
-			"5 e",
-			"6 d",
-			"7 c",
-			"8 b",
-			"9 a",
-			"a 9",
-			"a b",
-			"b 8",
-			"b c",
-			"c 7",
-			"c d",
-			"d 6",
-			"d e",
-			"e 5",
-			"e f",
-			"f 4",
-			"f g",
-			"g 3",
-			"g h",
-			"h 2",
-			"h i",
-			"i 1",
-			"i j"
-		];
+		const actual = performSortOperations({
+			userArgs,
+			readFromFile,
+			isFilePresent
+		});
+		const expected =
+			"1 i\n2 h\n3 g\n4 f\n5 e\n6 d\n7 c\n8 b\n9 a\na 9\na b\nb 8\nb c\nc 7\nc d\nd 6\nd e\ne 5\ne f\nf 4\nf g\ng 3\ng h\nh 2\nh i\ni 1\ni j";
 		assert.deepStrictEqual(actual, expected);
 	});
 
@@ -87,8 +62,12 @@ describe("performAction", () => {
 		const isFilePresent = filePath => {
 			return false;
 		};
-		const actual = performAction({ userArgs, readFromFile, isFilePresent });
-		const expected = [`sort: No such file or directory`];
+		const actual = performSortOperations({
+			userArgs,
+			readFromFile,
+			isFilePresent
+		});
+		const expected = `sort: No such file or directory`;
 		assert.deepStrictEqual(actual, expected);
 	});
 
@@ -100,7 +79,11 @@ describe("performAction", () => {
 		const isFilePresent = filePath => {
 			return true;
 		};
-		const actual = performAction({ userArgs, readFromFile, isFilePresent });
-		assert.deepStrictEqual(actual, [""]);
+		const actual = performSortOperations({
+			userArgs,
+			readFromFile,
+			isFilePresent
+		});
+		assert.deepStrictEqual(actual, "");
 	});
 });

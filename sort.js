@@ -1,6 +1,6 @@
 "use strict";
 
-const { performAction } = require("./src/sortLib");
+const { performSortOperations } = require("./src/performSortOperations");
 const {
 	isFilePresent,
 	readFromFile,
@@ -14,8 +14,8 @@ const main = userArgs => {
 		readFromFile,
 		writeIntoFile
 	};
-	const sortedData = performAction(argsObjecs);
-	console.log(sortedData.join("\n"));
+	const sortedData = performSortOperations(argsObjecs);
+	console.log(sortedData);
 };
 
 main(process.argv.slice(2));
