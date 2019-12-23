@@ -1,0 +1,1 @@
+(node ./sort.js ./docs/emptyFile.txt)
