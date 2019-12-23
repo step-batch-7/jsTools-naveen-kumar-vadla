@@ -24,5 +24,7 @@ v0.1
 
 Tasks : 
 -->sort Content based by given field
+    --format file content
 -->get The content of fileName
+    --generateErrorMessage
 -->parse user options

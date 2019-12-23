@@ -13,4 +13,5 @@ const writeIntoFile = function(filepath, data) {
 const isFilePresent = function(filepath) {
 	return fs.existsSync(filepath);
 };
+
 module.exports = { isFilePresent, readFromFile, writeIntoFile };
