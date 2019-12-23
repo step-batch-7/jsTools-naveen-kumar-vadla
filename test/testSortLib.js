@@ -21,6 +21,17 @@ describe("sortContent", () => {
 	it("Should give empty array if option  not specified", () => {
 		assert.deepStrictEqual(sortContent({ options: [], content: [] }), []);
 	});
+
+	it("Should give normally sorted data if specified field is more than the line length", () => {
+		const fileContentWithOptions = {
+			options: ["-k", "5"],
+			fileContent: ["j 5 z", "i 4 y", "h 3 x", "g 2 w", "f 1 v"],
+			delimiter: " "
+		};
+		const actual = sortContent(fileContentWithOptions);
+		const expected = ["f 1 v", "g 2 w", "h 3 x", "i 4 y", "j 5 z"];
+		assert.deepStrictEqual(actual, expected);
+	});
 });
 
 describe("parseUserOptions", () => {

@@ -21,11 +21,12 @@ const formatFileContent = (fileContent, delimiter, options) => {
 	const formattedContent = {};
 	fileContent.forEach(line => {
 		const allKeys = Object.keys(formattedContent);
-		const key = line.split(delimiter)[options[1] - 1];
-		if (allKeys.includes(key)) {
-			formattedContent[key].push(line);
-		} else {
+		const splittedLine = line.split(delimiter);
+		const key = String(splittedLine[options[1] - 1]);
+		if (!allKeys.includes(key)) {
 			formattedContent[key] = [line];
+		} else {
+			formattedContent[key].push(line);
 		}
 	});
 	return formattedContent;
