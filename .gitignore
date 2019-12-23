@@ -1,6 +1,3 @@
 node_modules/
 .nyc_output/
 coverage/
-output.txt
-expected.txt
-failures.txt
