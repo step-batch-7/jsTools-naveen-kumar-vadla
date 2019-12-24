@@ -19,22 +19,24 @@ const formatContent = (content, delimiter, options) => {
 };
 
 const sortContent = fileContentWithOptions => {
-	const sortedContent = [];
 	const { options, content, delimiter } = fileContentWithOptions;
-	if (options.includes("-k")) {
-		const formattedContent = formatContent(content, delimiter, options);
-		const keys = Object.keys(formattedContent).sort();
+	const sortedContent = [];
 
-		keys.map(key => {
-			sortedContent.push(...formattedContent[key].sort());
-		});
-	}
+	const formattedContent = formatContent(content, delimiter, options);
+	const keys = Object.keys(formattedContent).sort();
+
+	keys.map(key => {
+		sortedContent.push(...formattedContent[key].sort());
+	});
 	return sortedContent;
 };
 
 const parseUserOptions = userOptions => {
-	const optKIdx = userOptions.indexOf("-k");
-	const options = userOptions.splice(optKIdx, 2);
+	let options = [];
+	if (userOptions.includes("-k")) {
+		const optKIdx = userOptions.indexOf("-k");
+		options = userOptions.splice(optKIdx, 2);
+	}
 	const fileNames = userOptions.slice();
 
 	return { fileNames, options, delimiter: " " };

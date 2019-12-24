@@ -21,10 +21,6 @@ describe("sortContent", () => {
 		assert.deepStrictEqual(actual, expected);
 	});
 
-	it("Should give empty array if option -k not specified", () => {
-		assert.deepStrictEqual(sortContent({ options: [], content: [] }), []);
-	});
-
 	it("Should give normally sorted data if specified field is more than the line length", () => {
 		const fileContentWithOptions = {
 			options: ["-k", "5"],
