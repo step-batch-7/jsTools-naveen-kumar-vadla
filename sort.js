@@ -2,7 +2,7 @@
 
 const { stdout, stderr } = require("process");
 
-const { performSortOperations } = require("./src/performSortOperations");
+const { performSortOperations } = require("./src/sortLib");
 const {
 	isFilePresent,
 	readFromFile,
