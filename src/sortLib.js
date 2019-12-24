@@ -1,23 +1,9 @@
 "use strict";
 
-const sortByFields = fileContentWithOptions => {
-	const { options, fileContent, delimiter } = fileContentWithOptions;
-	const sortedContent = [];
-
-	const formattedContent = formatFileContent(fileContent, delimiter, options);
-	const keys = Object.keys(formattedContent).sort();
-
-	keys.forEach(key => {
-		sortedContent.push(...formattedContent[key].sort());
-	});
-
-	return sortedContent;
-};
-
-const formatFileContent = (fileContent, delimiter, options) => {
+const formatFileContent = (content, delimiter, options) => {
 	const formattedContent = {};
 
-	fileContent.forEach(line => {
+	content.forEach(line => {
 		const allKeys = Object.keys(formattedContent);
 		const splittedLine = line.split(delimiter);
 		const key = String(splittedLine[options[1] - 1]);
@@ -34,9 +20,14 @@ const formatFileContent = (fileContent, delimiter, options) => {
 
 const sortContent = fileContentWithOptions => {
 	let sortedContent = [];
-	const { options } = fileContentWithOptions;
+	const { options, content, delimiter } = fileContentWithOptions;
 	if (options.includes("-k")) {
-		sortedContent = sortByFields(fileContentWithOptions);
+		const formattedContent = formatFileContent(content, delimiter, options);
+		const keys = Object.keys(formattedContent).sort();
+
+		keys.forEach(key => {
+			sortedContent.push(...formattedContent[key].sort());
+		});
 	}
 	return sortedContent;
 };
@@ -44,14 +35,14 @@ const sortContent = fileContentWithOptions => {
 const parseUserOptions = userOptions => {
 	const optKIdx = userOptions.indexOf("-k");
 	const options = userOptions.splice(optKIdx, 2);
-	const fileName = userOptions[userOptions.length - 1];
+	const fileName = userOptions.slice();
 	const delimiter = " ";
+
 	return { fileName, options, delimiter };
 };
 
 module.exports = {
 	sortContent,
 	formatFileContent,
-	parseUserOptions,
-	sortByFields
+	parseUserOptions
 };

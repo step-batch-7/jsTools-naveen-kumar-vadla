@@ -8,11 +8,12 @@ const performSortOperations = argsObj => {
 
 	if (isNaN(+options[1]) || !(options[1] > 0))
 		return { error: `sort: -k ${options[1]}: Invalid argument` };
-	if (!isFilePresent(fileName))
+
+	if (!isFilePresent(fileName[0]))
 		return { error: `sort: No such file or directory` };
 
-	const fileContent = readFromFile(fileName).split("\n");
-	const fileContentWithOptions = { options, fileContent, delimiter };
+	const content = readFromFile(fileName[0]).split("\n");
+	const fileContentWithOptions = { options, content, delimiter };
 	const sortedData = sortContent(fileContentWithOptions);
 
 	return { sortedData: sortedData.join("\n") };
