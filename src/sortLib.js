@@ -41,7 +41,7 @@ const parseUserOptions = userOptions => {
 };
 
 const performSortOperation = (userArgs, fsUtils) => {
-	const { readFromFile, isFilePresent } = fsUtils;
+	const { readFileSync, existsSync } = fsUtils;
 	const { fileNames, options, delimiter } = parseUserOptions(userArgs);
 
 	if (isNaN(+options[1]) || !(options[1] > 0))
@@ -50,10 +50,10 @@ const performSortOperation = (userArgs, fsUtils) => {
 			error: `sort: -k ${options[1]}: Invalid argument`
 		};
 
-	if (!isFilePresent(fileNames[0]))
+	if (!existsSync(fileNames[0]))
 		return { sortedData: "", error: `sort: No such file or directory` };
 
-	const content = readFromFile(fileNames[0], "utf-8").split("\n");
+	const content = readFileSync(fileNames[0], "utf-8").split("\n");
 	const fileContentWithOptions = { options, content, delimiter };
 	const sortedData = sortContent(fileContentWithOptions);
 

@@ -87,15 +87,15 @@ describe("formatFileContent", () => {
 describe("performSortOperation", () => {
 	it("Should give sorted Data of given File if exists", () => {
 		const userArgs = ["-k", "1", "./docs/sampleFile.txt"];
-		const readFromFile = fileName => {
+		const readFileSync = fileName => {
 			return "a 9\nb 8\nc 7\nd 6\ne 5\nf 4\ng 3\nh 2\ni 1\n9 a\n8 b\n7 c\n6 d\n5 e\n4 f\n3 g\n2 h\n1 i\na b\nb c\nc d\nd e\ne f\nf g\ng h\nh i\ni j";
 		};
-		const isFilePresent = filePath => {
+		const existsSync = filePath => {
 			return true;
 		};
 		const actual = performSortOperation(userArgs, {
-			readFromFile,
-			isFilePresent
+			readFileSync,
+			existsSync
 		});
 		const expected = {
 			sortedData:
@@ -107,15 +107,15 @@ describe("performSortOperation", () => {
 
 	it("Should give error message if file doesn't exist", () => {
 		const userArgs = ["-k", "1", "./docs/sampleFile.txt"];
-		const readFromFile = fileName => {
+		const readFileSync = fileName => {
 			return "a 9\nb 8";
 		};
-		const isFilePresent = filePath => {
+		const existsSync = filePath => {
 			return false;
 		};
 		const actual = performSortOperation(userArgs, {
-			readFromFile,
-			isFilePresent
+			readFileSync,
+			existsSync
 		});
 		const expected = {
 			sortedData: "",
@@ -126,30 +126,30 @@ describe("performSortOperation", () => {
 
 	it("Should give empty string for empty file", () => {
 		const userArgs = ["-k", "1", "./docs/sampleFile.txt"];
-		const readFromFile = fileName => {
+		const readFileSync = fileName => {
 			return "";
 		};
-		const isFilePresent = filePath => {
+		const existsSync = filePath => {
 			return true;
 		};
 		const actual = performSortOperation(userArgs, {
-			readFromFile,
-			isFilePresent
+			readFileSync,
+			existsSync
 		});
 		assert.deepStrictEqual(actual, { sortedData: "", error: "" });
 	});
 
 	it("Should give normally sorted data if specified field is more than the line length", () => {
 		const userArgs = ["-k", "5", "./docs/sampleFile.txt"];
-		const readFromFile = fileName => {
+		const readFileSync = fileName => {
 			return "j 5 z\ni 4 y\nh 3 x\ng 2 w\nf 1 v";
 		};
-		const isFilePresent = filePath => {
+		const existsSync = filePath => {
 			return true;
 		};
 		const actual = performSortOperation(userArgs, {
-			readFromFile,
-			isFilePresent
+			readFileSync,
+			existsSync
 		});
 		const expected = {
 			sortedData: "f 1 v\ng 2 w\nh 3 x\ni 4 y\nj 5 z",
@@ -160,15 +160,15 @@ describe("performSortOperation", () => {
 
 	it("Should give error message if -k value is NaN", () => {
 		const userArgs = ["-k", "abcd", "./docs/sampleFile.txt"];
-		const readFromFile = fileName => {
+		const readFileSync = fileName => {
 			return "j 5 z\ni 4 y\nh 3 x\ng 2 w\nf 1 v";
 		};
-		const isFilePresent = filePath => {
+		const existsSync = filePath => {
 			return true;
 		};
 		const actual = performSortOperation(userArgs, {
-			readFromFile,
-			isFilePresent
+			readFileSync,
+			existsSync
 		});
 		const expected = {
 			sortedData: "",
@@ -180,15 +180,15 @@ describe("performSortOperation", () => {
 
 	it("Should give error message for negative value for -k", () => {
 		const userArgs = ["-k", "-5", "./docs/sampleFile.txt"];
-		const readFromFile = fileName => {
+		const readFileSync = fileName => {
 			return "j 5 z\ni 4 y\nh 3 x\ng 2 w\nf 1 v";
 		};
-		const isFilePresent = filePath => {
+		const existsSync = filePath => {
 			return true;
 		};
 		const actual = performSortOperation(userArgs, {
-			readFromFile,
-			isFilePresent
+			readFileSync,
+			existsSync
 		});
 		const expected = {
 			sortedData: "",
