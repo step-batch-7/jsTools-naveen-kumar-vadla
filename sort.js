@@ -10,13 +10,12 @@ const {
 } = require("./src/fsUtilitiesLib");
 
 const main = userArgs => {
-	const argsObjecs = {
-		userArgs,
+	const fsUtils = {
 		isFilePresent,
 		readFromFile,
 		writeIntoFile
 	};
-	const result = performSortOperation(argsObjecs);
+	const result = performSortOperation(userArgs, fsUtils);
 	result.sortedData && stdout.write(result.sortedData);
 	result.error && stderr.write(result.error);
 };

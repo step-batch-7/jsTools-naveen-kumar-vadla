@@ -40,8 +40,8 @@ const parseUserOptions = userOptions => {
 	return { fileNames, options, delimiter: " " };
 };
 
-const performSortOperation = argsObj => {
-	const { userArgs, readFromFile, isFilePresent } = argsObj;
+const performSortOperation = (userArgs, fsUtils) => {
+	const { readFromFile, isFilePresent } = fsUtils;
 	const { fileNames, options, delimiter } = parseUserOptions(userArgs);
 
 	if (isNaN(+options[1]) || !(options[1] > 0))

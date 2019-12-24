@@ -93,8 +93,7 @@ describe("performSortOperation", () => {
 		const isFilePresent = filePath => {
 			return true;
 		};
-		const actual = performSortOperation({
-			userArgs,
+		const actual = performSortOperation(userArgs, {
 			readFromFile,
 			isFilePresent
 		});
@@ -113,8 +112,7 @@ describe("performSortOperation", () => {
 		const isFilePresent = filePath => {
 			return false;
 		};
-		const actual = performSortOperation({
-			userArgs,
+		const actual = performSortOperation(userArgs, {
 			readFromFile,
 			isFilePresent
 		});
@@ -130,8 +128,7 @@ describe("performSortOperation", () => {
 		const isFilePresent = filePath => {
 			return true;
 		};
-		const actual = performSortOperation({
-			userArgs,
+		const actual = performSortOperation(userArgs, {
 			readFromFile,
 			isFilePresent
 		});
@@ -146,8 +143,7 @@ describe("performSortOperation", () => {
 		const isFilePresent = filePath => {
 			return true;
 		};
-		const actual = performSortOperation({
-			userArgs,
+		const actual = performSortOperation(userArgs, {
 			readFromFile,
 			isFilePresent
 		});
@@ -163,8 +159,7 @@ describe("performSortOperation", () => {
 		const isFilePresent = filePath => {
 			return true;
 		};
-		const actual = performSortOperation({
-			userArgs,
+		const actual = performSortOperation(userArgs, {
 			readFromFile,
 			isFilePresent
 		});
@@ -182,8 +177,7 @@ describe("performSortOperation", () => {
 		const isFilePresent = filePath => {
 			return true;
 		};
-		const actual = performSortOperation({
-			userArgs,
+		const actual = performSortOperation(userArgs, {
 			readFromFile,
 			isFilePresent
 		});
