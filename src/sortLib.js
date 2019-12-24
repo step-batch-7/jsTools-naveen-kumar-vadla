@@ -3,7 +3,7 @@
 const formatFileContent = (content, delimiter, options) => {
 	const formattedContent = {};
 
-	content.forEach(line => {
+	content.map(line => {
 		const allKeys = Object.keys(formattedContent);
 		const splittedLine = line.split(delimiter);
 		const key = String(splittedLine[options[1] - 1]);
@@ -19,13 +19,13 @@ const formatFileContent = (content, delimiter, options) => {
 };
 
 const sortContent = fileContentWithOptions => {
-	let sortedContent = [];
+	const sortedContent = [];
 	const { options, content, delimiter } = fileContentWithOptions;
 	if (options.includes("-k")) {
 		const formattedContent = formatFileContent(content, delimiter, options);
 		const keys = Object.keys(formattedContent).sort();
 
-		keys.forEach(key => {
+		keys.map(key => {
 			sortedContent.push(...formattedContent[key].sort());
 		});
 	}
