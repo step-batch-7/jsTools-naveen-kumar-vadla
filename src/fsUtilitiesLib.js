@@ -2,15 +2,15 @@
 
 const fs = require("fs");
 
-const readFromFile = function(filepath, encoding) {
+const readFromFile = (filepath, encoding) => {
 	return fs.readFileSync(filepath, encoding);
 };
 
-const writeIntoFile = function(filepath, data) {
+const writeIntoFile = (filepath, data) => {
 	fs.writeFileSync(filepath, data, encoding);
 };
 
-const isFilePresent = function(filepath) {
+const isFilePresent = filepath => {
 	return fs.existsSync(filepath);
 };
 
