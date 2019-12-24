@@ -12,8 +12,8 @@ Features:
 [11] node ./sort.js -r fileName
 [12] cat fileName | node ./sort.js on number
 
-==> node ./sort.js fileName1,fileName2,...
-==> cat fileName1,fileName2,... | node ./sort.js
+==> node ./sort.js fileName1,fileName2,.....
+==> cat fileName1,fileName2,..... | node ./sort.js
 ==> node ./sort.js fileName -o outputFileName
 ==> cat filename | node ./sort.js
 ==> node ./sort.js 

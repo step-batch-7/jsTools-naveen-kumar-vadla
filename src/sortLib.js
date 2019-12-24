@@ -25,9 +25,8 @@ const sortContent = fileContentWithOptions => {
 	const formattedContent = formatContent(content, delimiter, options);
 	const keys = Object.keys(formattedContent).sort();
 
-	keys.map(key => {
-		sortedContent.push(...formattedContent[key].sort());
-	});
+	keys.map(key => sortedContent.push(...formattedContent[key].sort()));
+
 	return sortedContent;
 };
 
