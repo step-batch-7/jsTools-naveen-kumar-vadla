@@ -99,7 +99,8 @@ describe("performSortOperation", () => {
 		});
 		const expected = {
 			sortedData:
-				"1 i\n2 h\n3 g\n4 f\n5 e\n6 d\n7 c\n8 b\n9 a\na 9\na b\nb 8\nb c\nc 7\nc d\nd 6\nd e\ne 5\ne f\nf 4\nf g\ng 3\ng h\nh 2\nh i\ni 1\ni j"
+				"1 i\n2 h\n3 g\n4 f\n5 e\n6 d\n7 c\n8 b\n9 a\na 9\na b\nb 8\nb c\nc 7\nc d\nd 6\nd e\ne 5\ne f\nf 4\nf g\ng 3\ng h\nh 2\nh i\ni 1\ni j",
+			error: ""
 		};
 		assert.deepStrictEqual(actual, expected);
 	});
@@ -116,7 +117,10 @@ describe("performSortOperation", () => {
 			readFromFile,
 			isFilePresent
 		});
-		const expected = { error: `sort: No such file or directory` };
+		const expected = {
+			sortedData: "",
+			error: `sort: No such file or directory`
+		};
 		assert.deepStrictEqual(actual, expected);
 	});
 
@@ -132,7 +136,7 @@ describe("performSortOperation", () => {
 			readFromFile,
 			isFilePresent
 		});
-		assert.deepStrictEqual(actual, { sortedData: "" });
+		assert.deepStrictEqual(actual, { sortedData: "", error: "" });
 	});
 
 	it("Should give normally sorted data if specified field is more than the line length", () => {
@@ -147,7 +151,10 @@ describe("performSortOperation", () => {
 			readFromFile,
 			isFilePresent
 		});
-		const expected = { sortedData: "f 1 v\ng 2 w\nh 3 x\ni 4 y\nj 5 z" };
+		const expected = {
+			sortedData: "f 1 v\ng 2 w\nh 3 x\ni 4 y\nj 5 z",
+			error: ""
+		};
 		assert.deepStrictEqual(actual, expected);
 	});
 
@@ -164,8 +171,10 @@ describe("performSortOperation", () => {
 			isFilePresent
 		});
 		const expected = {
+			sortedData: "",
 			error: `sort: -k abcd: Invalid argument`
 		};
+
 		assert.deepStrictEqual(actual, expected);
 	});
 
@@ -182,8 +191,10 @@ describe("performSortOperation", () => {
 			isFilePresent
 		});
 		const expected = {
+			sortedData: "",
 			error: `sort: -k -5: Invalid argument`
 		};
+
 		assert.deepStrictEqual(actual, expected);
 	});
 });

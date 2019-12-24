@@ -16,8 +16,8 @@ const main = userArgs => {
 		writeIntoFile
 	};
 	const result = performSortOperation(userArgs, fsUtils);
-	result.sortedData && stdout.write(result.sortedData);
-	result.error && stderr.write(result.error);
+	stdout.write(result.sortedData);
+	stderr.write(result.error);
 };
 
 main(process.argv.slice(2));

@@ -45,16 +45,19 @@ const performSortOperation = (userArgs, fsUtils) => {
 	const { fileNames, options, delimiter } = parseUserOptions(userArgs);
 
 	if (isNaN(+options[1]) || !(options[1] > 0))
-		return { error: `sort: -k ${options[1]}: Invalid argument` };
+		return {
+			sortedData: "",
+			error: `sort: -k ${options[1]}: Invalid argument`
+		};
 
 	if (!isFilePresent(fileNames[0]))
-		return { error: `sort: No such file or directory` };
+		return { sortedData: "", error: `sort: No such file or directory` };
 
 	const content = readFromFile(fileNames[0], "utf-8").split("\n");
 	const fileContentWithOptions = { options, content, delimiter };
 	const sortedData = sortContent(fileContentWithOptions);
 
-	return { sortedData: sortedData.join("\n") };
+	return { sortedData: sortedData.join("\n"), error: "" };
 };
 
 module.exports = {
