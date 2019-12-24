@@ -36,9 +36,8 @@ const parseUserOptions = userOptions => {
 	const optKIdx = userOptions.indexOf("-k");
 	const options = userOptions.splice(optKIdx, 2);
 	const fileNames = userOptions.slice();
-	const delimiter = " ";
 
-	return { fileNames, options, delimiter };
+	return { fileNames, options, delimiter: " " };
 };
 
 const performSortOperation = argsObj => {
@@ -51,7 +50,7 @@ const performSortOperation = argsObj => {
 	if (!isFilePresent(fileNames[0]))
 		return { error: `sort: No such file or directory` };
 
-	const content = readFromFile(fileNames[0]).split("\n");
+	const content = readFromFile(fileNames[0], "utf-8").split("\n");
 	const fileContentWithOptions = { options, content, delimiter };
 	const sortedData = sortContent(fileContentWithOptions);
 

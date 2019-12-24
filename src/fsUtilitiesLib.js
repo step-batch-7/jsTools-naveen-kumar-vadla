@@ -2,12 +2,12 @@
 
 const fs = require("fs");
 
-const readFromFile = function(filepath) {
-	return fs.readFileSync(filepath, "utf8");
+const readFromFile = function(filepath, encoding) {
+	return fs.readFileSync(filepath, encoding);
 };
 
 const writeIntoFile = function(filepath, data) {
-	fs.writeFileSync(filepath, data, "utf8");
+	fs.writeFileSync(filepath, data, encoding);
 };
 
 const isFilePresent = function(filepath) {
