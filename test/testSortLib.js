@@ -4,7 +4,7 @@ const { assert } = require("chai");
 
 const {
 	sortContent,
-	formatFileContent,
+	formatContent,
 	parseUserOptions,
 	performSortOperation
 } = require("../src/sortLib");
@@ -59,10 +59,10 @@ describe("parseUserOptions", () => {
 	});
 });
 
-describe("formatFileContent", () => {
+describe("formatContent", () => {
 	it("Should give formatted fileContent if fileContent is given ", () => {
 		const fileContent = ["a b", "c d", "e f", "a 1", "c 3", "e 5"];
-		const actual = formatFileContent(fileContent, " ", ["-k", "1"]);
+		const actual = formatContent(fileContent, " ", ["-k", "1"]);
 		const expected = {
 			a: ["a b", "a 1"],
 			c: ["c d", "c 3"],
@@ -72,13 +72,13 @@ describe("formatFileContent", () => {
 	});
 
 	it("Should give empty object for empty fileContent", () => {
-		const actual = formatFileContent([], " ", ["-k", "1"]);
+		const actual = formatContent([], " ", ["-k", "1"]);
 		assert.deepStrictEqual(actual, {});
 	});
 
 	it("Should give object with only one value for -k value is more than line fields", () => {
 		const fileContent = ["a b", "c d", "e f", "a 1", "c 3", "e 5"];
-		const actual = formatFileContent(fileContent, " ", ["-k", "5"]);
+		const actual = formatContent(fileContent, " ", ["-k", "5"]);
 		const expected = { undefined: ["a b", "c d", "e f", "a 1", "c 3", "e 5"] };
 		assert.deepStrictEqual(actual, expected);
 	});

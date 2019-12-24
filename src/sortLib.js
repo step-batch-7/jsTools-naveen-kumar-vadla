@@ -1,6 +1,6 @@
 "use strict";
 
-const formatFileContent = (content, delimiter, options) => {
+const formatContent = (content, delimiter, options) => {
 	const formattedContent = {};
 
 	content.map(line => {
@@ -22,7 +22,7 @@ const sortContent = fileContentWithOptions => {
 	const sortedContent = [];
 	const { options, content, delimiter } = fileContentWithOptions;
 	if (options.includes("-k")) {
-		const formattedContent = formatFileContent(content, delimiter, options);
+		const formattedContent = formatContent(content, delimiter, options);
 		const keys = Object.keys(formattedContent).sort();
 
 		keys.map(key => {
@@ -62,7 +62,7 @@ const performSortOperation = (userArgs, fsUtils) => {
 
 module.exports = {
 	sortContent,
-	formatFileContent,
+	formatContent,
 	parseUserOptions,
 	performSortOperation
 };
