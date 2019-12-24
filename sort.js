@@ -2,7 +2,7 @@
 
 const { stdout, stderr } = require("process");
 
-const { performSortOperations } = require("./src/sortLib");
+const { performSortOperation } = require("./src/sortLib");
 const {
 	isFilePresent,
 	readFromFile,
@@ -16,7 +16,7 @@ const main = userArgs => {
 		readFromFile,
 		writeIntoFile
 	};
-	const result = performSortOperations(argsObjecs);
+	const result = performSortOperation(argsObjecs);
 	result.sortedData && stdout.write(result.sortedData);
 	result.error && stderr.write(result.error);
 };

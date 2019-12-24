@@ -6,7 +6,7 @@ const {
 	sortContent,
 	formatFileContent,
 	parseUserOptions,
-	performSortOperations
+	performSortOperation
 } = require("../src/sortLib");
 
 describe("sortContent", () => {
@@ -51,7 +51,7 @@ describe("parseUserOptions", () => {
 	it("Should give parsed User Options", () => {
 		const actual = parseUserOptions(["-k", "1", "./docs/sampleFile.txt"]);
 		const expected = {
-			fileName: ["./docs/sampleFile.txt"],
+			fileNames: ["./docs/sampleFile.txt"],
 			options: ["-k", "1"],
 			delimiter: " "
 		};
@@ -84,7 +84,7 @@ describe("formatFileContent", () => {
 	});
 });
 
-describe("performSortOperations", () => {
+describe("performSortOperation", () => {
 	it("Should give sorted Data of given File if exists", () => {
 		const userArgs = ["-k", "1", "./docs/sampleFile.txt"];
 		const readFromFile = fileName => {
@@ -93,7 +93,7 @@ describe("performSortOperations", () => {
 		const isFilePresent = filePath => {
 			return true;
 		};
-		const actual = performSortOperations({
+		const actual = performSortOperation({
 			userArgs,
 			readFromFile,
 			isFilePresent
@@ -113,7 +113,7 @@ describe("performSortOperations", () => {
 		const isFilePresent = filePath => {
 			return false;
 		};
-		const actual = performSortOperations({
+		const actual = performSortOperation({
 			userArgs,
 			readFromFile,
 			isFilePresent
@@ -130,7 +130,7 @@ describe("performSortOperations", () => {
 		const isFilePresent = filePath => {
 			return true;
 		};
-		const actual = performSortOperations({
+		const actual = performSortOperation({
 			userArgs,
 			readFromFile,
 			isFilePresent
@@ -146,7 +146,7 @@ describe("performSortOperations", () => {
 		const isFilePresent = filePath => {
 			return true;
 		};
-		const actual = performSortOperations({
+		const actual = performSortOperation({
 			userArgs,
 			readFromFile,
 			isFilePresent
@@ -163,7 +163,7 @@ describe("performSortOperations", () => {
 		const isFilePresent = filePath => {
 			return true;
 		};
-		const actual = performSortOperations({
+		const actual = performSortOperation({
 			userArgs,
 			readFromFile,
 			isFilePresent
@@ -182,7 +182,7 @@ describe("performSortOperations", () => {
 		const isFilePresent = filePath => {
 			return true;
 		};
-		const actual = performSortOperations({
+		const actual = performSortOperation({
 			userArgs,
 			readFromFile,
 			isFilePresent

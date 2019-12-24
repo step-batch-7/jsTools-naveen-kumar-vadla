@@ -35,23 +35,23 @@ const sortContent = fileContentWithOptions => {
 const parseUserOptions = userOptions => {
 	const optKIdx = userOptions.indexOf("-k");
 	const options = userOptions.splice(optKIdx, 2);
-	const fileName = userOptions.slice();
+	const fileNames = userOptions.slice();
 	const delimiter = " ";
 
-	return { fileName, options, delimiter };
+	return { fileNames, options, delimiter };
 };
 
-const performSortOperations = argsObj => {
+const performSortOperation = argsObj => {
 	const { userArgs, readFromFile, isFilePresent } = argsObj;
-	const { fileName, options, delimiter } = parseUserOptions(userArgs);
+	const { fileNames, options, delimiter } = parseUserOptions(userArgs);
 
 	if (isNaN(+options[1]) || !(options[1] > 0))
 		return { error: `sort: -k ${options[1]}: Invalid argument` };
 
-	if (!isFilePresent(fileName[0]))
+	if (!isFilePresent(fileNames[0]))
 		return { error: `sort: No such file or directory` };
 
-	const content = readFromFile(fileName[0]).split("\n");
+	const content = readFromFile(fileNames[0]).split("\n");
 	const fileContentWithOptions = { options, content, delimiter };
 	const sortedData = sortContent(fileContentWithOptions);
 
@@ -62,5 +62,5 @@ module.exports = {
 	sortContent,
 	formatFileContent,
 	parseUserOptions,
-	performSortOperations
+	performSortOperation
 };
