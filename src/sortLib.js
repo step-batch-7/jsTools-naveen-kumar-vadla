@@ -1,9 +1,9 @@
 "use strict";
 
-const formatContent = function(delimiter, options, line) {
+const formatContent = function(delimiter, field, line) {
 	const allKeys = Object.keys(this);
 	const splittedLine = line.split(delimiter);
-	const key = String(splittedLine[options[1] - 1]);
+	const key = String(splittedLine[field]);
 
 	if (!allKeys.includes(key)) {
 		this[key] = [line];
@@ -17,7 +17,7 @@ const sortContent = fileContentWithOptions => {
 	const sortedContent = [];
 	const formattedContent = {};
 
-	content.map(formatContent.bind(formattedContent, delimiter, options));
+	content.map(formatContent.bind(formattedContent, delimiter, options[1] - 1));
 	const keys = Object.keys(formattedContent).sort();
 
 	keys.map(key => sortedContent.push(...formattedContent[key].sort()));
