@@ -26,34 +26,34 @@ const sortContent = fileContentWithOptions => {
 };
 
 const parseUserOptions = userOptions => {
-	let options = [];
+	let options = ["-k", "1"];
+
 	if (userOptions.includes("-k")) {
 		const optKIdx = userOptions.indexOf("-k");
 		options = userOptions.splice(optKIdx, 2);
 	}
-	const fileNames = userOptions.slice();
 
-	return { fileNames, options, delimiter: " " };
+	return { fileNames: userOptions.slice(), options, delimiter: " " };
 };
 
 const performSortOperation = (userArgs, fsUtils) => {
 	const { readFileSync, existsSync } = fsUtils;
 	const { fileNames, options, delimiter } = parseUserOptions(userArgs);
+	const result = { sortedData: "", error: "" };
 
-	if (isNaN(+options[1]) || !(options[1] > 0))
-		return {
-			sortedData: "",
-			error: `sort: -k ${options[1]}: Invalid argument`
-		};
+	if (isNaN(+options[1]) || !(options[1] > 0)) {
+		result.error = `sort: -k ${options[1]}: Invalid argument`;
+		return result;
+	}
 
-	if (!existsSync(fileNames[0]))
-		return { sortedData: "", error: `sort: No such file or directory` };
+	if (!existsSync(fileNames[0])) {
+		result.error = `sort: No such file or directory`;
+		return result;
+	}
 
 	const content = readFileSync(fileNames[0], "utf-8").split("\n");
-	const fileContentWithOptions = { options, content, delimiter };
-	const sortedData = sortContent(fileContentWithOptions);
-
-	return { sortedData: sortedData.join("\n"), error: "" };
+	result.sortedData = sortContent({ options, content, delimiter }).join("\n");
+	return result;
 };
 
 module.exports = {
