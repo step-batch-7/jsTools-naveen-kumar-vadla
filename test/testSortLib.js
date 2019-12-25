@@ -55,31 +55,6 @@ describe("parseUserOptions", () => {
 	});
 });
 
-describe("formatContent", () => {
-	it("Should give formatted fileContent if fileContent is given ", () => {
-		const fileContent = ["a b", "c d", "e f", "a 1", "c 3", "e 5"];
-		const actual = formatContent(fileContent, " ", ["-k", "1"]);
-		const expected = {
-			a: ["a b", "a 1"],
-			c: ["c d", "c 3"],
-			e: ["e f", "e 5"]
-		};
-		assert.deepStrictEqual(actual, expected);
-	});
-
-	it("Should give empty object for empty fileContent", () => {
-		const actual = formatContent([], " ", ["-k", "1"]);
-		assert.deepStrictEqual(actual, {});
-	});
-
-	it("Should give object with only one value for -k value is more than line fields", () => {
-		const fileContent = ["a b", "c d", "e f", "a 1", "c 3", "e 5"];
-		const actual = formatContent(fileContent, " ", ["-k", "5"]);
-		const expected = { undefined: ["a b", "c d", "e f", "a 1", "c 3", "e 5"] };
-		assert.deepStrictEqual(actual, expected);
-	});
-});
-
 describe("performSortOperation", () => {
 	it("Should give sorted Data of given File if exists", () => {
 		const userArgs = ["-k", "1", "./docs/sampleFile.txt"];
