@@ -55,25 +55,6 @@ describe("parseUserOptions", () => {
 	});
 });
 
-describe("formatContent", () => {
-	it("Should give an object with given field as key and array of line as value ", () => {
-		const actual = {};
-		const a = formatContent.bind(actual, " ", 0);
-		a("a b");
-		const expected = { a: ["a b"] };
-		assert.deepStrictEqual(actual, expected);
-	});
-
-	it("Should give an array with of values if given field is same", () => {
-		const actual = {};
-		const a = formatContent.bind(actual, " ", 0);
-		a("a b");
-		a("a 1");
-		const expected = { a: ["a b", "a 1"] };
-		assert.deepStrictEqual(actual, expected);
-	});
-});
-
 describe("performSortOperation", () => {
 	it("Should give sorted Data of given File if exists", () => {
 		const userArgs = ["-k", "1", "./docs/sampleFile.txt"];
