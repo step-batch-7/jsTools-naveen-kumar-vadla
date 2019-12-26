@@ -3,11 +3,11 @@
 const fs = require("fs");
 const { stdout, stderr } = require("process");
 
-const { performSortOperation } = require("./src/sortLib");
+const { sort } = require("./src/sortLib");
 
 const main = userArgs => {
-	const result = performSortOperation(userArgs, fs);
-	stdout.write(result.sortedData);
+	const result = sort(userArgs, fs);
+	stdout.write(result.sortedLines);
 	stderr.write(result.error);
 };
 

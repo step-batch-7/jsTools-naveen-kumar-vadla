@@ -1,64 +1,43 @@
 "use strict";
 
-const formatContent = function(delimiter, field, line) {
-	const allKeys = Object.keys(this);
+const formatLines = function(delimiter, fieldValue, line) {
+	const fields = Object.keys(this);
 	const splittedLine = line.split(delimiter);
-	const key = String(splittedLine[field]);
-
-	if (!allKeys.includes(key)) {
-		this[key] = [line];
-	} else {
-		this[key].push(line);
-	}
+	const field = String(splittedLine[fieldValue]);
+	if (!fields.includes(field)) this[field] = [line];
+	else this[field].push(line);
 };
 
-const sortContent = fileContentWithOptions => {
-	const { options, content, delimiter } = fileContentWithOptions;
-	const sortedContent = [];
-	const formattedContent = {};
-
-	content.map(formatContent.bind(formattedContent, delimiter, options[1] - 1));
-	const keys = Object.keys(formattedContent).sort();
-
-	keys.map(key => sortedContent.push(...formattedContent[key].sort()));
-
-	return sortedContent;
+const sortLines = (lines, options) => {
+	const { fieldValue, delimiter } = options;
+	const sortedLines = [];
+	const formattedLines = {};
+	lines.forEach(formatLines.bind(formattedLines, delimiter, fieldValue - 1));
+	const fields = Object.keys(formattedLines).sort();
+	fields.forEach(key => sortedLines.push(...formattedLines[key].sort()));
+	return sortedLines;
 };
 
-const parseUserOptions = userOptions => {
-	let options = ["-k", "1"];
-
-	if (userOptions.includes("-k")) {
-		const optKIdx = userOptions.indexOf("-k");
-		options = userOptions.splice(optKIdx, 2);
-	}
-
-	return { fileNames: userOptions.slice(), options, delimiter: " " };
+const parseUserArgs = userArgs => {
+	const [, fieldValue, fileName] = userArgs;
+	return { fieldValue, fileName, delimiter: " " };
 };
 
-const performSortOperation = (userArgs, fsUtils) => {
-	const { readFileSync, existsSync } = fsUtils;
-	const { fileNames, options, delimiter } = parseUserOptions(userArgs);
-	const result = { sortedData: "", error: "" };
-
-	if (isNaN(+options[1]) || !(options[1] > 0)) {
-		result.error = `sort: -k ${options[1]}: Invalid argument`;
-		return result;
-	}
-
-	if (!existsSync(fileNames[0])) {
-		result.error = `sort: No such file or directory`;
-		return result;
-	}
-
-	const content = readFileSync(fileNames[0], "utf-8").split("\n");
-	result.sortedData = sortContent({ options, content, delimiter }).join("\n");
-	return result;
+const sort = (userArgs, fileSystem) => {
+	const { readFileSync, existsSync } = fileSystem;
+	const { fileName, fieldValue, delimiter } = parseUserArgs(userArgs);
+	let error = "";
+	let sortedLines = "";
+	if (isNaN(+fieldValue) || !(+fieldValue > 0))
+		return { error: `sort: -k ${fieldValue}: Invalid argument`, sortedLines };
+	if (!existsSync(fileName)) return { error: `sort: No such file or directory`, sortedLines };
+	const lines = readFileSync(fileName, "utf-8").split("\n");
+	sortedLines = sortLines(lines, { fieldValue, delimiter }).join("\n");
+	return { sortedLines, error };
 };
 
 module.exports = {
-	sortContent,
-	formatContent,
-	parseUserOptions,
-	performSortOperation
+	sortLines,
+	parseUserArgs,
+	sort
 };

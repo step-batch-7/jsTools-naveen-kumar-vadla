@@ -2,60 +2,55 @@
 
 const { assert } = require("chai");
 
-const {
-	sortContent,
-	formatContent,
-	parseUserOptions,
-	performSortOperation
-} = require("../src/sortLib");
+const { sortLines, parseUserArgs, sort } = require("../src/sortLib");
 
-describe("sortContent", () => {
+describe("sortLines", () => {
 	it("Should give sorted form of given fileContent with options delimeter ' '", () => {
-		const fileContentWithOptions = {
-			options: ["-k", "3"],
-			content: ["j 5 z", "i 4 y", "h 3 x", "g 2 w", "f 1 v"],
+		const lines = ["j 5 z", "i 4 y", "h 3 x", "g 2 w", "f 1 v"];
+		const options = {
+			fieldValue: "3",
 			delimiter: " "
 		};
-		const actual = sortContent(fileContentWithOptions);
+		const actual = sortLines(lines, options);
 		const expected = ["f 1 v", "g 2 w", "h 3 x", "i 4 y", "j 5 z"];
 		assert.deepStrictEqual(actual, expected);
 	});
 
 	it("Should give normally sorted data if specified field is more than the line length", () => {
-		const fileContentWithOptions = {
-			options: ["-k", "5"],
-			content: ["j 5 z", "i 4 y", "h 3 x", "g 2 w", "f 1 v"],
+		const lines = ["j 5 z", "i 4 y", "h 3 x", "g 2 w", "f 1 v"];
+		const options = {
+			fieldValue: "5",
 			delimiter: " "
 		};
-		const actual = sortContent(fileContentWithOptions);
+		const actual = sortLines(lines, options);
 		const expected = ["f 1 v", "g 2 w", "h 3 x", "i 4 y", "j 5 z"];
 		assert.deepStrictEqual(actual, expected);
 	});
 
 	it("Should give empty array if file content is empty", () => {
-		const fileContentWithOptions = {
-			options: ["-k", "1"],
-			content: [],
+		const lines = [];
+		const options = {
+			fieldValue: "1",
 			delimiter: " "
 		};
-		const actual = sortContent(fileContentWithOptions);
+		const actual = sortLines(lines, options);
 		assert.deepStrictEqual(actual, []);
 	});
 });
 
-describe("parseUserOptions", () => {
+describe("parseUserArgs", () => {
 	it("Should give parsed User Options", () => {
-		const actual = parseUserOptions(["-k", "1", "./docs/sampleFile.txt"]);
+		const actual = parseUserArgs(["-k", "1", "./docs/sampleFile.txt"]);
 		const expected = {
-			fileNames: ["./docs/sampleFile.txt"],
-			options: ["-k", "1"],
+			fileName: "./docs/sampleFile.txt",
+			fieldValue: "1",
 			delimiter: " "
 		};
 		assert.deepStrictEqual(actual, expected);
 	});
 });
 
-describe("performSortOperation", () => {
+describe("sort", () => {
 	it("Should give sorted Data of given File if exists", () => {
 		const userArgs = ["-k", "1", "./docs/sampleFile.txt"];
 		const readFileSync = fileName => {
@@ -64,12 +59,12 @@ describe("performSortOperation", () => {
 		const existsSync = filePath => {
 			return true;
 		};
-		const actual = performSortOperation(userArgs, {
+		const actual = sort(userArgs, {
 			readFileSync,
 			existsSync
 		});
 		const expected = {
-			sortedData:
+			sortedLines:
 				"1 i\n2 h\n3 g\n4 f\n5 e\n6 d\n7 c\n8 b\n9 a\na 9\na b\nb 8\nb c\nc 7\nc d\nd 6\nd e\ne 5\ne f\nf 4\nf g\ng 3\ng h\nh 2\nh i\ni 1\ni j",
 			error: ""
 		};
@@ -84,12 +79,12 @@ describe("performSortOperation", () => {
 		const existsSync = filePath => {
 			return false;
 		};
-		const actual = performSortOperation(userArgs, {
+		const actual = sort(userArgs, {
 			readFileSync,
 			existsSync
 		});
 		const expected = {
-			sortedData: "",
+			sortedLines: "",
 			error: `sort: No such file or directory`
 		};
 		assert.deepStrictEqual(actual, expected);
@@ -103,11 +98,11 @@ describe("performSortOperation", () => {
 		const existsSync = filePath => {
 			return true;
 		};
-		const actual = performSortOperation(userArgs, {
+		const actual = sort(userArgs, {
 			readFileSync,
 			existsSync
 		});
-		assert.deepStrictEqual(actual, { sortedData: "", error: "" });
+		assert.deepStrictEqual(actual, { sortedLines: "", error: "" });
 	});
 
 	it("Should give normally sorted data if specified field is more than the line length", () => {
@@ -118,12 +113,12 @@ describe("performSortOperation", () => {
 		const existsSync = filePath => {
 			return true;
 		};
-		const actual = performSortOperation(userArgs, {
+		const actual = sort(userArgs, {
 			readFileSync,
 			existsSync
 		});
 		const expected = {
-			sortedData: "f 1 v\ng 2 w\nh 3 x\ni 4 y\nj 5 z",
+			sortedLines: "f 1 v\ng 2 w\nh 3 x\ni 4 y\nj 5 z",
 			error: ""
 		};
 		assert.deepStrictEqual(actual, expected);
@@ -137,12 +132,12 @@ describe("performSortOperation", () => {
 		const existsSync = filePath => {
 			return true;
 		};
-		const actual = performSortOperation(userArgs, {
+		const actual = sort(userArgs, {
 			readFileSync,
 			existsSync
 		});
 		const expected = {
-			sortedData: "",
+			sortedLines: "",
 			error: `sort: -k abcd: Invalid argument`
 		};
 
@@ -157,12 +152,12 @@ describe("performSortOperation", () => {
 		const existsSync = filePath => {
 			return true;
 		};
-		const actual = performSortOperation(userArgs, {
+		const actual = sort(userArgs, {
 			readFileSync,
 			existsSync
 		});
 		const expected = {
-			sortedData: "",
+			sortedLines: "",
 			error: `sort: -k -5: Invalid argument`
 		};
 
