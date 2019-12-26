@@ -6,9 +6,9 @@ const { stdout, stderr } = require("process");
 const { sort } = require("./src/sortLib");
 
 const main = userArgs => {
-	const result = sort(userArgs, fs);
-	stdout.write(result.sortedLines);
-	stderr.write(result.error);
+	const { sortedLines, error } = sort(userArgs, fs);
+	stdout.write(sortedLines);
+	stderr.write(error);
 };
 
 main(process.argv.slice(2));
