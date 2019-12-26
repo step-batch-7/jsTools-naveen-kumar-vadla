@@ -7,7 +7,8 @@ const {
 	parseUserArgs,
 	sort,
 	isColumnPresent,
-	isPositiveNumber
+	isPositiveNumber,
+	sortByFields
 } = require("../src/sortLib");
 
 describe("sortLines", () => {
@@ -196,5 +197,22 @@ describe("isPositiveNumber", () => {
 	it("Should give false if given number is not a integer", () => {
 		const actual = isPositiveNumber("a");
 		assert.notOk(actual);
+	});
+});
+
+describe("sortByFields", () => {
+	it("Should give -1 for given line1Field is less than line2Field", () => {
+		const actual = sortByFields(" ", 0, "a b", "b a");
+		assert.strictEqual(actual, -1);
+	});
+
+	it("Should give 1 for given line1Field is greater than line2Field", () => {
+		const actual = sortByFields(" ", 1, "a b", "b a");
+		assert.strictEqual(actual, 1);
+	});
+
+	it("Should give 0 for given line1Field is equal to line2Field", () => {
+		const actual = sortByFields(" ", 0, "a b", "a c");
+		assert.strictEqual(actual, 0);
 	});
 });
