@@ -8,7 +8,7 @@ describe("sortLines", () => {
 	it("Should give sorted form of given fileContent with options delimeter ' '", () => {
 		const lines = ["j 5 z", "i 4 y", "h 3 x", "g 2 w", "f 1 v"];
 		const options = {
-			fieldValue: "3",
+			columnNumber: "3",
 			delimiter: " "
 		};
 		const actual = sortLines(lines, options);
@@ -19,7 +19,7 @@ describe("sortLines", () => {
 	it("Should give normally sorted data if specified field is more than the line length", () => {
 		const lines = ["j 5 z", "i 4 y", "h 3 x", "g 2 w", "f 1 v"];
 		const options = {
-			fieldValue: "5",
+			columnNumber: "5",
 			delimiter: " "
 		};
 		const actual = sortLines(lines, options);
@@ -30,7 +30,7 @@ describe("sortLines", () => {
 	it("Should give empty array if file content is empty", () => {
 		const lines = [];
 		const options = {
-			fieldValue: "1",
+			columnNumber: "1",
 			delimiter: " "
 		};
 		const actual = sortLines(lines, options);
@@ -43,7 +43,7 @@ describe("parseUserArgs", () => {
 		const actual = parseUserArgs(["-k", "1", "./docs/sampleFile.txt"]);
 		const expected = {
 			fileName: "./docs/sampleFile.txt",
-			fieldValue: "1",
+			columnNumber: "1",
 			delimiter: " "
 		};
 		assert.deepStrictEqual(actual, expected);
