@@ -8,8 +8,8 @@ const formatLines = function(delimiter, columnNumber, line) {
 	else this[field].push(line);
 };
 
-const sortLines = (lines, options) => {
-	const { columnNumber, delimiter } = options;
+const sortLines = (lines, sortOptions) => {
+	const { columnNumber, delimiter } = sortOptions;
 	const sortedLines = [];
 	const formattedLines = {};
 	lines.forEach(formatLines.bind(formattedLines, delimiter, columnNumber - 1));

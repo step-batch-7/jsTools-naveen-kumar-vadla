@@ -7,33 +7,33 @@ const { sortLines, parseUserArgs, sort } = require("../src/sortLib");
 describe("sortLines", () => {
 	it("Should give sorted form of given fileContent with options delimeter ' '", () => {
 		const lines = ["j 5 z", "i 4 y", "h 3 x", "g 2 w", "f 1 v"];
-		const options = {
+		const sortOptions = {
 			columnNumber: "3",
 			delimiter: " "
 		};
-		const actual = sortLines(lines, options);
+		const actual = sortLines(lines, sortOptions);
 		const expected = ["f 1 v", "g 2 w", "h 3 x", "i 4 y", "j 5 z"];
 		assert.deepStrictEqual(actual, expected);
 	});
 
 	it("Should give normally sorted data if specified field is more than the line length", () => {
 		const lines = ["j 5 z", "i 4 y", "h 3 x", "g 2 w", "f 1 v"];
-		const options = {
+		const sortOptions = {
 			columnNumber: "5",
 			delimiter: " "
 		};
-		const actual = sortLines(lines, options);
+		const actual = sortLines(lines, sortOptions);
 		const expected = ["f 1 v", "g 2 w", "h 3 x", "i 4 y", "j 5 z"];
 		assert.deepStrictEqual(actual, expected);
 	});
 
 	it("Should give empty array if file content is empty", () => {
 		const lines = [];
-		const options = {
+		const sortOptions = {
 			columnNumber: "1",
 			delimiter: " "
 		};
-		const actual = sortLines(lines, options);
+		const actual = sortLines(lines, sortOptions);
 		assert.deepStrictEqual(actual, []);
 	});
 });
