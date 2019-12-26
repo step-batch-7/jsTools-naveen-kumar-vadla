@@ -1,10 +1,10 @@
 "use strict";
 
 const formatLines = function(delimiter, columnNumber, line) {
-	const fields = Object.keys(this);
-	const splittedLine = line.split(delimiter);
-	const field = String(splittedLine[columnNumber]);
-	if (!fields.includes(field)) this[field] = [line];
+	const keys = Object.keys(this);
+	const columns = line.split(delimiter);
+	const field = String(columns[columnNumber]);
+	if (!keys.includes(field)) this[field] = [line];
 	else this[field].push(line);
 };
 
@@ -14,7 +14,7 @@ const sortLines = (lines, sortOptions) => {
 	const formattedLines = {};
 	lines.forEach(formatLines.bind(formattedLines, delimiter, columnNumber - 1));
 	const fields = Object.keys(formattedLines).sort();
-	fields.forEach(key => sortedLines.push(...formattedLines[key].sort()));
+	fields.forEach(field => sortedLines.push(...formattedLines[field].sort()));
 	return sortedLines;
 };
 
