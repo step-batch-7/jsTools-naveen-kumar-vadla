@@ -6,7 +6,6 @@ const {
 	sortLines,
 	parseUserArgs,
 	sort,
-	isColumnPresent,
 	isPositiveNumber,
 	sortByFields
 } = require("../src/sortLib");
@@ -163,23 +162,6 @@ describe("sort", () => {
 		};
 
 		assert.deepStrictEqual(actual, expected);
-	});
-});
-
-describe("isColumnPresent", () => {
-	it("Should give true if given column number is less than line length", () => {
-		const actual = isColumnPresent(1, "a b c", " ");
-		assert.ok(actual);
-	});
-
-	it("Should give true if given column number is equal to line length", () => {
-		const actual = isColumnPresent(3, "a b c", " ");
-		assert.ok(actual);
-	});
-
-	it("Should give false if given column number is greater than the line length", () => {
-		const actual = isColumnPresent(5, "a b c", " ");
-		assert.notOk(actual);
 	});
 });
 

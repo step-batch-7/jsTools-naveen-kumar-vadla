@@ -8,11 +8,8 @@ const sortByFields = (delimiter, columnNumber, line1, line2) => {
 	return 0;
 };
 
-const isColumnPresent = (columnNumber, line, delimiter) =>
-	columnNumber <= line.split(delimiter).length;
-
 const sortLines = (lines, columnNumber, delimiter) => {
-	if (!isColumnPresent(columnNumber, lines[0], delimiter)) return lines.sort();
+	if (columnNumber > lines[0].split(delimiter).length) return lines.sort();
 	lines.sort(sortByFields.bind(null, delimiter, columnNumber - 1));
 	return lines;
 };
@@ -42,6 +39,5 @@ module.exports = {
 	parseUserArgs,
 	sort,
 	isPositiveNumber,
-	isColumnPresent,
 	sortByFields
 };
