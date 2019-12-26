@@ -2,39 +2,39 @@
 
 const { assert } = require("chai");
 
-const { sortLines, parseUserArgs, sort } = require("../src/sortLib");
+const {
+	sortLines,
+	parseUserArgs,
+	sort,
+	isColumnPresent,
+	isPositiveNumber
+} = require("../src/sortLib");
 
 describe("sortLines", () => {
 	it("Should give sorted form of given fileContent with options delimeter ' '", () => {
 		const lines = ["j 5 z", "i 4 y", "h 3 x", "g 2 w", "f 1 v"];
-		const sortOptions = {
-			columnNumber: "3",
-			delimiter: " "
-		};
-		const actual = sortLines(lines, sortOptions);
+		const columnNumber = "3";
+		const delimiter = " ";
+		const actual = sortLines(lines, columnNumber, delimiter);
 		const expected = ["f 1 v", "g 2 w", "h 3 x", "i 4 y", "j 5 z"];
 		assert.deepStrictEqual(actual, expected);
 	});
 
 	it("Should give normally sorted data if specified field is more than the line length", () => {
 		const lines = ["j 5 z", "i 4 y", "h 3 x", "g 2 w", "f 1 v"];
-		const sortOptions = {
-			columnNumber: "5",
-			delimiter: " "
-		};
-		const actual = sortLines(lines, sortOptions);
+		const columnNumber = "5";
+		const delimiter = " ";
+		const actual = sortLines(lines, columnNumber, delimiter);
 		const expected = ["f 1 v", "g 2 w", "h 3 x", "i 4 y", "j 5 z"];
 		assert.deepStrictEqual(actual, expected);
 	});
 
-	it("Should give empty array if file content is empty", () => {
-		const lines = [];
-		const sortOptions = {
-			columnNumber: "1",
-			delimiter: " "
-		};
-		const actual = sortLines(lines, sortOptions);
-		assert.deepStrictEqual(actual, []);
+	it("Should give array with empty string if file content is empty string", () => {
+		const lines = [""];
+		const columnNumber = "1";
+		const delimiter = " ";
+		const actual = sortLines(lines, columnNumber, delimiter);
+		assert.deepStrictEqual(actual, [""]);
 	});
 });
 
@@ -162,5 +162,39 @@ describe("sort", () => {
 		};
 
 		assert.deepStrictEqual(actual, expected);
+	});
+});
+
+describe("isColumnPresent", () => {
+	it("Should give true if given column number is less than line length", () => {
+		const actual = isColumnPresent(1, "a b c", " ");
+		assert.ok(actual);
+	});
+
+	it("Should give true if given column number is equal to line length", () => {
+		const actual = isColumnPresent(3, "a b c", " ");
+		assert.ok(actual);
+	});
+
+	it("Should give false if given column number is greater than the line length", () => {
+		const actual = isColumnPresent(5, "a b c", " ");
+		assert.notOk(actual);
+	});
+});
+
+describe("isPositiveNumber", () => {
+	it("Should give true if given number is a positive integer", () => {
+		const actual = isPositiveNumber(1);
+		assert.ok(actual);
+	});
+
+	it("Should give false if given number is a negative integer", () => {
+		const actual = isPositiveNumber(-1);
+		assert.notOk(actual);
+	});
+
+	it("Should give false if given number is not a integer", () => {
+		const actual = isPositiveNumber("a");
+		assert.notOk(actual);
 	});
 });
