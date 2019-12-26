@@ -23,12 +23,16 @@ const parseUserArgs = userArgs => {
 	return { columnNumber, fileName, delimiter: " " };
 };
 
+function isValidColumnNumber(columnNumber) {
+	return isNaN(+columnNumber) || !(+columnNumber > 0);
+}
+
 const sort = (userArgs, fileSystem) => {
 	const { readFileSync, existsSync } = fileSystem;
 	const { fileName, columnNumber, delimiter } = parseUserArgs(userArgs);
 	let error = "";
 	let sortedLines = "";
-	if (isNaN(+columnNumber) || !(+columnNumber > 0))
+	if (isValidColumnNumber(columnNumber))
 		return { error: `sort: -k ${columnNumber}: Invalid argument`, sortedLines };
 	if (!existsSync(fileName)) return { error: `sort: No such file or directory`, sortedLines };
 	const lines = readFileSync(fileName, "utf-8").split("\n");
