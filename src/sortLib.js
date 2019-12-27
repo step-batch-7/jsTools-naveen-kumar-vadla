@@ -27,7 +27,8 @@ const sort = (userArgs, fs) => {
 	let sortedLines = "";
 	if (!isPositiveInteger(columnNumber))
 		return { error: `sort: -k ${columnNumber}: Invalid argument`, sortedLines };
-	if (!fs.existsSync(fileName)) return { error: `sort: No such file or directory`, sortedLines };
+	if (!fs.existsSync(fileName))
+		return { error: `sort: No such file or directory`, sortedLines };
 	const lines = fs.readFileSync(fileName, "utf-8").split("\n");
 	sortedLines = sortLines(lines, columnNumber, delimiter).join("\n");
 	return { sortedLines, error };
