@@ -27,8 +27,7 @@ const sort = (userArgs, fs) => {
 	const parsedUserArgs = parseUserArgs(userArgs);
 	if (parsedUserArgs.error) return { error: parsedUserArgs.error, sortedLines };
 	const { fileName, columnNumber, delimiter } = parsedUserArgs;
-	if (!fs.existsSync(fileName))
-		return { error: `sort: No such file or directory`, sortedLines };
+	if (!fs.existsSync(fileName)) return { error: `sort: No such file or directory`, sortedLines };
 	const lines = fs.readFileSync(fileName, "utf-8").split("\n");
 	const rows = lines.map(line => line.split(delimiter));
 	const sortedRows = sortRows(rows, columnNumber);
@@ -36,10 +35,4 @@ const sort = (userArgs, fs) => {
 	return { sortedLines: sortedLines.join("\n"), error };
 };
 
-module.exports = {
-	sortRows,
-	parseUserArgs,
-	sort,
-	isPositiveInteger,
-	compareRows
-};
+module.exports = { sortRows, parseUserArgs, sort, isPositiveInteger, compareRows };
