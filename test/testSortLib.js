@@ -28,12 +28,29 @@ describe("sortRows", () => {
 });
 
 describe("parseUserArgs", () => {
-	it("Should give parsed User Options", () => {
+	it("Should give parsed User Options if given column number is a positive number", () => {
 		const actual = parseUserArgs(["-k", "1", "./docs/sampleFile.txt"]);
 		const expected = {
 			fileName: "./docs/sampleFile.txt",
 			columnNumber: "1",
-			delimiter: " "
+			delimiter: " ",
+			error: ""
+		};
+		assert.deepStrictEqual(actual, expected);
+	});
+
+	it("Should give error if given column number is not a number", () => {
+		const actual = parseUserArgs(["-k", "a", "./docs/sampleFile.txt"]);
+		const expected = {
+			error: `sort: -k a: Invalid argument`
+		};
+		assert.deepStrictEqual(actual, expected);
+	});
+
+	it("Should give error if given column number is a negative number", () => {
+		const actual = parseUserArgs(["-k", "-1", "./docs/sampleFile.txt"]);
+		const expected = {
+			error: `sort: -k -1: Invalid argument`
 		};
 		assert.deepStrictEqual(actual, expected);
 	});
@@ -92,46 +109,6 @@ describe("sort", () => {
 			existsSync
 		});
 		assert.deepStrictEqual(actual, { sortedLines: "", error: "" });
-	});
-
-	it("Should give error message if -k value is NaN", () => {
-		const userArgs = ["-k", "abcd", "./docs/sampleFile.txt"];
-		const readFileSync = fileName => {
-			return "j 5 z\ni 4 y\nh 3 x\ng 2 w\nf 1 v";
-		};
-		const existsSync = filePath => {
-			return true;
-		};
-		const actual = sort(userArgs, {
-			readFileSync,
-			existsSync
-		});
-		const expected = {
-			sortedLines: "",
-			error: `sort: -k abcd: Invalid argument`
-		};
-
-		assert.deepStrictEqual(actual, expected);
-	});
-
-	it("Should give error message for negative value for -k", () => {
-		const userArgs = ["-k", "-5", "./docs/sampleFile.txt"];
-		const readFileSync = fileName => {
-			return "j 5 z\ni 4 y\nh 3 x\ng 2 w\nf 1 v";
-		};
-		const existsSync = filePath => {
-			return true;
-		};
-		const actual = sort(userArgs, {
-			readFileSync,
-			existsSync
-		});
-		const expected = {
-			sortedLines: "",
-			error: `sort: -k -5: Invalid argument`
-		};
-
-		assert.deepStrictEqual(actual, expected);
 	});
 
 	it("Should give error message if file doesn't exist", () => {
