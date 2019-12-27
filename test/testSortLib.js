@@ -6,7 +6,7 @@ const {
 	sortLines,
 	parseUserArgs,
 	sort,
-	isPositiveNumber,
+	isPositiveInteger,
 	sortByFields
 } = require("../src/sortLib");
 
@@ -165,19 +165,19 @@ describe("sort", () => {
 	});
 });
 
-describe("isPositiveNumber", () => {
+describe("isPositiveInteger", () => {
 	it("Should give true if given number is a positive integer", () => {
-		const actual = isPositiveNumber(1);
+		const actual = isPositiveInteger(1);
 		assert.ok(actual);
 	});
 
 	it("Should give false if given number is a negative integer", () => {
-		const actual = isPositiveNumber(-1);
+		const actual = isPositiveInteger(-1);
 		assert.notOk(actual);
 	});
 
 	it("Should give false if given number is not a integer", () => {
-		const actual = isPositiveNumber("a");
+		const actual = isPositiveInteger("a");
 		assert.notOk(actual);
 	});
 });

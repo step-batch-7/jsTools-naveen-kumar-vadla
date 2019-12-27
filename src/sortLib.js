@@ -19,13 +19,13 @@ const parseUserArgs = userArgs => {
 	return { columnNumber, fileName, delimiter: " " };
 };
 
-const isPositiveNumber = num => Number.isInteger(+num) && +num > 0;
+const isPositiveInteger = num => Number.isInteger(+num) && +num > 0;
 
 const sort = (userArgs, fs) => {
 	const { fileName, columnNumber, delimiter } = parseUserArgs(userArgs);
 	let error = "";
 	let sortedLines = "";
-	if (!isPositiveNumber(columnNumber))
+	if (!isPositiveInteger(columnNumber))
 		return { error: `sort: -k ${columnNumber}: Invalid argument`, sortedLines };
 	if (!fs.existsSync(fileName)) return { error: `sort: No such file or directory`, sortedLines };
 	const lines = fs.readFileSync(fileName, "utf-8").split("\n");
@@ -37,6 +37,6 @@ module.exports = {
 	sortLines,
 	parseUserArgs,
 	sort,
-	isPositiveNumber,
+	isPositiveInteger,
 	sortByFields
 };
