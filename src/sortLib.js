@@ -1,21 +1,15 @@
 "use strict";
 
-const getRequiredField = (line, delimiter, columnNumber) => {
-	return line.split(delimiter)[columnNumber];
-};
-
-const sortByFields = (delimiter, columnNumber, line1, line2) => {
-	if (columnNumber > line1.split(delimiter).length) columnNumber = 0;
-	let line1Field = getRequiredField(line1, delimiter, columnNumber);
-	let line2Field = getRequiredField(line2, delimiter, columnNumber);
-	if (line1Field < line2Field) return -1;
-	if (line1Field > line2Field) return 1;
+const compareRows = function(row1, row2) {
+	if (this.columnNumber > row1.length) this.columnNumber = 1;
+	if (row1[this.columnNumber - 1] < row2[this.columnNumber - 1]) return -1;
+	if (row1[this.columnNumber - 1] > row2[this.columnNumber - 1]) return 1;
 	return 0;
 };
 
-const sortLines = (lines, columnNumber, delimiter) => {
-	lines.sort(sortByFields.bind(null, delimiter, columnNumber - 1));
-	return lines;
+const sortRows = (rows, columnNumber) => {
+	rows.sort(compareRows.bind({ columnNumber }));
+	return rows;
 };
 
 const parseUserArgs = userArgs => {
@@ -26,22 +20,24 @@ const parseUserArgs = userArgs => {
 const isPositiveInteger = num => Number.isInteger(+num) && +num > 0;
 
 const sort = (userArgs, fs) => {
-	const { fileName, columnNumber, delimiter } = parseUserArgs(userArgs);
 	let error = "";
 	let sortedLines = "";
+	const { fileName, columnNumber, delimiter } = parseUserArgs(userArgs);
 	if (!isPositiveInteger(columnNumber))
 		return { error: `sort: -k ${columnNumber}: Invalid argument`, sortedLines };
 	if (!fs.existsSync(fileName))
 		return { error: `sort: No such file or directory`, sortedLines };
 	const lines = fs.readFileSync(fileName, "utf-8").split("\n");
-	sortedLines = sortLines(lines, columnNumber, delimiter).join("\n");
-	return { sortedLines, error };
+	const rows = lines.map(line => line.split(delimiter));
+	const sortedRows = sortRows(rows, columnNumber);
+	sortedLines = sortedRows.map(row => row.join(delimiter));
+	return { sortedLines: sortedLines.join("\n"), error };
 };
 
 module.exports = {
-	sortLines,
+	sortRows,
 	parseUserArgs,
 	sort,
 	isPositiveInteger,
-	sortByFields
+	compareRows
 };

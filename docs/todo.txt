@@ -23,7 +23,7 @@ v0.1
 --done--    -->Modules : chai
 
 Tasks : 
---done-- -->sort Content based by given field (sortLines)
+--done-- -->sort Content based by given field (sortRows)
     --format file content (formatLines)
 --done-- -->get The content of fileName
 --done-- -->parse user options (parseUserArgs)

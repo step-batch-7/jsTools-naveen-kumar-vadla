@@ -3,38 +3,27 @@
 const { assert } = require("chai");
 
 const {
-	sortLines,
+	sortRows,
 	parseUserArgs,
 	sort,
-	isPositiveInteger,
-	sortByFields
+	isPositiveInteger
 } = require("../src/sortLib");
 
-describe("sortLines", () => {
+describe("sortRows", () => {
 	it("Should give sorted form of given fileContent with options delimeter ' '", () => {
-		const lines = ["j 5 z", "i 4 y", "h 3 x", "g 2 w", "f 1 v"];
+		const lines = [["j 5 z"], ["i 4 y"], ["h 3 x"], ["g 2 w"], ["f 1 v"]];
 		const columnNumber = "3";
-		const delimiter = " ";
-		const actual = sortLines(lines, columnNumber, delimiter);
-		const expected = ["f 1 v", "g 2 w", "h 3 x", "i 4 y", "j 5 z"];
+		const actual = sortRows(lines, columnNumber);
+		const expected = [["f 1 v"], ["g 2 w"], ["h 3 x"], ["i 4 y"], ["j 5 z"]];
 		assert.deepStrictEqual(actual, expected);
 	});
 
 	it("Should give normally sorted data if specified field is more than the line length", () => {
-		const lines = ["j 5 z", "i 4 y", "h 3 x", "g 2 w", "f 1 v"];
+		const lines = [["j 5 z"], ["i 4 y"], ["h 3 x"], ["g 2 w"], ["f 1 v"]];
 		const columnNumber = "5";
-		const delimiter = " ";
-		const actual = sortLines(lines, columnNumber, delimiter);
-		const expected = ["f 1 v", "g 2 w", "h 3 x", "i 4 y", "j 5 z"];
+		const actual = sortRows(lines, columnNumber);
+		const expected = [["f 1 v"], ["g 2 w"], ["h 3 x"], ["i 4 y"], ["j 5 z"]];
 		assert.deepStrictEqual(actual, expected);
-	});
-
-	it("Should give array with empty string if file content is empty string", () => {
-		const lines = [""];
-		const columnNumber = "1";
-		const delimiter = " ";
-		const actual = sortLines(lines, columnNumber, delimiter);
-		assert.deepStrictEqual(actual, [""]);
 	});
 });
 
@@ -71,40 +60,6 @@ describe("sort", () => {
 		assert.deepStrictEqual(actual, expected);
 	});
 
-	it("Should give error message if file doesn't exist", () => {
-		const userArgs = ["-k", "1", "./docs/sampleFile.txt"];
-		const readFileSync = fileName => {
-			return "a 9\nb 8";
-		};
-		const existsSync = filePath => {
-			return false;
-		};
-		const actual = sort(userArgs, {
-			readFileSync,
-			existsSync
-		});
-		const expected = {
-			sortedLines: "",
-			error: `sort: No such file or directory`
-		};
-		assert.deepStrictEqual(actual, expected);
-	});
-
-	it("Should give empty string for empty file", () => {
-		const userArgs = ["-k", "1", "./docs/sampleFile.txt"];
-		const readFileSync = fileName => {
-			return "";
-		};
-		const existsSync = filePath => {
-			return true;
-		};
-		const actual = sort(userArgs, {
-			readFileSync,
-			existsSync
-		});
-		assert.deepStrictEqual(actual, { sortedLines: "", error: "" });
-	});
-
 	it("Should give normally sorted data if specified field is more than the line length", () => {
 		const userArgs = ["-k", "5", "./docs/sampleFile.txt"];
 		const readFileSync = fileName => {
@@ -122,6 +77,21 @@ describe("sort", () => {
 			error: ""
 		};
 		assert.deepStrictEqual(actual, expected);
+	});
+
+	it("Should give empty string for empty file", () => {
+		const userArgs = ["-k", "1", "./docs/sampleFile.txt"];
+		const readFileSync = fileName => {
+			return "";
+		};
+		const existsSync = filePath => {
+			return true;
+		};
+		const actual = sort(userArgs, {
+			readFileSync,
+			existsSync
+		});
+		assert.deepStrictEqual(actual, { sortedLines: "", error: "" });
 	});
 
 	it("Should give error message if -k value is NaN", () => {
@@ -163,6 +133,25 @@ describe("sort", () => {
 
 		assert.deepStrictEqual(actual, expected);
 	});
+
+	it("Should give error message if file doesn't exist", () => {
+		const userArgs = ["-k", "1", "./docs/sampleFile.txt"];
+		const readFileSync = fileName => {
+			return "a 9\nb 8";
+		};
+		const existsSync = filePath => {
+			return false;
+		};
+		const actual = sort(userArgs, {
+			readFileSync,
+			existsSync
+		});
+		const expected = {
+			sortedLines: "",
+			error: `sort: No such file or directory`
+		};
+		assert.deepStrictEqual(actual, expected);
+	});
 });
 
 describe("isPositiveInteger", () => {
@@ -179,22 +168,5 @@ describe("isPositiveInteger", () => {
 	it("Should give false if given number is not a integer", () => {
 		const actual = isPositiveInteger("a");
 		assert.notOk(actual);
-	});
-});
-
-describe("sortByFields", () => {
-	it("Should give -1 for given line1Field is less than line2Field", () => {
-		const actual = sortByFields(" ", 0, "a b", "b a");
-		assert.strictEqual(actual, -1);
-	});
-
-	it("Should give 1 for given line1Field is greater than line2Field", () => {
-		const actual = sortByFields(" ", 1, "a b", "b a");
-		assert.strictEqual(actual, 1);
-	});
-
-	it("Should give 0 for given line1Field is equal to line2Field", () => {
-		const actual = sortByFields(" ", 0, "a b", "a c");
-		assert.strictEqual(actual, 0);
 	});
 });

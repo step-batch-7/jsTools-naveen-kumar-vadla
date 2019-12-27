@@ -1,7 +1,7 @@
 "use strict";
 
 const fs = require("fs");
-const { stdout, stderr } = require("process");
+const { stdout, stderr } = process;
 
 const { sort } = require("./src/sortLib");
 
