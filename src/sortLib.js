@@ -21,15 +21,14 @@ const parseUserArgs = userArgs => {
 
 const isPositiveNumber = num => Number.isInteger(+num) && +num > 0;
 
-const sort = (userArgs, fileSystem) => {
-	const { readFileSync, existsSync } = fileSystem;
+const sort = (userArgs, fs) => {
 	const { fileName, columnNumber, delimiter } = parseUserArgs(userArgs);
 	let error = "";
 	let sortedLines = "";
 	if (!isPositiveNumber(columnNumber))
 		return { error: `sort: -k ${columnNumber}: Invalid argument`, sortedLines };
-	if (!existsSync(fileName)) return { error: `sort: No such file or directory`, sortedLines };
-	const lines = readFileSync(fileName, "utf-8").split("\n");
+	if (!fs.existsSync(fileName)) return { error: `sort: No such file or directory`, sortedLines };
+	const lines = fs.readFileSync(fileName, "utf-8").split("\n");
 	sortedLines = sortLines(lines, columnNumber, delimiter).join("\n");
 	return { sortedLines, error };
 };
