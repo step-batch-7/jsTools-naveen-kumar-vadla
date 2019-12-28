@@ -13,7 +13,7 @@ b
 
 
 considering a black box of the app :
-[options,"one.txt"] ==> {sort.js} ==>
+[options,'one.txt'] ==> {sort.js} ==>
     which is the transformation of file name 
     to sorted content of the fileName according to options 
 
@@ -51,30 +51,30 @@ node ./sort.js -k 1 two.txt
 
 [1.1] The Last Step
 output: sortedData ( array )
-["a 9","b 8","c 7","d 6","e 5","f 4","g 3","h 2","i 1","j 0"]
+['a 9','b 8','c 7','d 6','e 5','f 4','g 3','h 2','i 1','j 0']
 
 Input : unsorted fileContent and options ( object )
-{options:['-k','2'],content:["j 0","i 1","h 2","g 3","f 4","e 5","d 6","c 7","b 8","a 9"]}
+{options:['-k','2'],content:['j 0','i 1','h 2','g 3','f 4','e 5','d 6','c 7','b 8','a 9']}
 
 name : sortFileContent(contentAndOptions)
 
 [1.2] The Previous Step
 
 output: unsorted fileContent and options ( object )
-{options:['-k','2'],content:["j 0","i 1","h 2","g 3","f 4","e 5","d 6","c 7","b 8","a 9"]}
+{options:['-k','2'],content:['j 0','i 1','h 2','g 3','f 4','e 5','d 6','c 7','b 8','a 9']}
 
 input:fileName (string)
-"two.txt"
+'two.txt'
 
 name ==> generateContentOptionsObj( fileName,options )
 
 [1.3] The First Starting Step ( main function )
 
-output ==> console.log of given array joined with "\n" ( string )
-  console.log( result.join("\n") )
+output ==> console.log of given array joined with '\n' ( string )
+  console.log( result.join('\n') )
 
 input ==> process.argv.slice(2) ( array of userInput )
-  ["-n","filename"]
+  ['-n','filename']
 
 
 <================================ Requirement=============================================>
@@ -98,30 +98,30 @@ node ./sort.js -n one.txt
 
 ==> Option -n is specified <==
 output ==> numerically sorted content of file ( array )
-["a","b","c","d","e","f","1","2","3","4","5"]
+['a','b','c','d','e','f','1','2','3','4','5']
 
 input ==> unsorted file content ( fileContent ) ( array )
-["a","2","f","c","1","d","4","e","5","b","3"] 
+['a','2','f','c','1','d','4','e','5','b','3'] 
 
 name ==> sortFileContent (fileContent)
 
 [1.2] The Previous Step
 
 output ==> fileContent ( array )
-["a","2","f","c","1","d","4","e","5","b","3"] 
+['a','2','f','c','1','d','4','e','5','b','3'] 
 
 input ==> filename ( string )
-  "one.txt"
+  'one.txt'
 
 name ==> getContentOfFile( fileName )
 
 [1.3] The First Starting Step ( main function )
 
-output ==> console.log of given array joined with "\n" ( string )
-  console.log( result.join("\n") )
+output ==> console.log of given array joined with '\n' ( string )
+  console.log( result.join('\n') )
 
 input ==> process.argv.slice(2) ( array of userInput )
-  ["-n","filename"]
+  ['-n','filename']
 
 <===================================== Requirement=========================================>
 
@@ -143,30 +143,30 @@ node ./sort.js one.txt
 [1.1] The Last Step
 
 output ==> sorted content of file ( array )
-  ["1","2","3","4","5","a","b","c","d","e","f"]
+  ['1','2','3','4','5','a','b','c','d','e','f']
 
 input ==> unsorted file content ( fileContent ) (array)
-["a","2","f","c","1","d","4","e","5","b","3"] 
+['a','2','f','c','1','d','4','e','5','b','3'] 
 
 name ==> sortFileContent (fileContent)
 
 [1.2] The Previous Step
 
 output ==> fileContent ( array )
-["a","2","f","c","1","d","4","e","5","b","3"] 
+['a','2','f','c','1','d','4','e','5','b','3'] 
 
 input ==> filename ( string )
-  "one.txt"
+  'one.txt'
 
 name ==> getContentOfFile( fileName )
 
 [1.3] The First Starting Step ( main function )
 
-output ==> console.log of given array joined with "\n" ( string )
-  console.log( result.join("\n") )
+output ==> console.log of given array joined with '\n' ( string )
+  console.log( result.join('\n') )
 
 input ==> process.argv.slice(2) ( array of userInput )
-  ["options","filename"]
+  ['options','filename']
 
 name ==> main()
 
@@ -193,28 +193,28 @@ node ./sort.js -r one.txt
 
 ==> Option -r is specified <==
 output ==> reversly sorted content of file ( array )
-["f","e","d","c","b","a","5","4","3","2","1"]
+['f','e','d','c','b','a','5','4','3','2','1']
 
 input ==> unsorted file content ( fileContent ) ( array )
-["a","2","f","c","1","d","4","e","5","b","3"] 
+['a','2','f','c','1','d','4','e','5','b','3'] 
 
 name ==> sortFileContent (fileContent)
 
 [1.2] The Previous Step
 
 output ==> fileContent ( array )
-["a","2","f","c","1","d","4","e","5","b","3"] 
+['a','2','f','c','1','d','4','e','5','b','3'] 
 
 input ==> filename ( string )
-  "one.txt"
+  'one.txt'
 
 name ==> getContentOfFile( fileName )
 
 [1.3] The First Starting Step ( main function )
 
-output ==> console.log of given array joined with "\n" ( string )
-  console.log( result.join("\n") )
+output ==> console.log of given array joined with '\n' ( string )
+  console.log( result.join('\n') )
 
 input ==> process.argv.slice(2) ( array of userInput )
-  ["-r","filename"]
+  ['-r','filename']
 

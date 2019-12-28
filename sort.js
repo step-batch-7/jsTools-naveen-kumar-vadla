@@ -1,9 +1,9 @@
-"use strict";
+'use strict';
 
-const fs = require("fs");
+const fs = require('fs');
 const { stdout, stderr } = process;
 
-const { sort } = require("./src/sortLib");
+const { sort } = require('./src/sortLib');
 
 const main = userArgs => {
 	const { sortedLines, error } = sort(userArgs, fs);
