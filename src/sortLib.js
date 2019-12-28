@@ -1,24 +1,29 @@
 'use strict';
 
-const compareRows = function(row1, row2) {
+const compareRows = function(columnNumber, row1, row2) {
   const one = 1;
   const minusOne = -1;
   const zero = 0;
-  if (this.columnNumber > row1.length) {
-    this.columnNumber = one;
+  if (columnNumber > row1.length) {
+    columnNumber = one;
   }
-  if (row1[this.columnNumber - one] < row2[this.columnNumber - one]) {
+  if (row1[columnNumber - one] < row2[columnNumber - one]) {
     return minusOne;
   }
-  if (row1[this.columnNumber - one] > row2[this.columnNumber - one]) {
+  if (row1[columnNumber - one] > row2[columnNumber - one]) {
     return one;
   }
   return zero;
 };
 
 const sortRows = (rows, columnNumber) => {
-  rows.sort(compareRows.bind({ columnNumber }));
+  rows.sort(compareRows.bind(null, columnNumber));
   return rows;
+};
+
+const isPositiveInteger = num => {
+  const zero = 0;
+  return Number.isInteger(+num) && +num > zero;
 };
 
 const parseUserArgs = userArgs => {
@@ -27,11 +32,6 @@ const parseUserArgs = userArgs => {
     return { error: `sort: -k ${columnNumber}: Invalid argument` };
   }
   return { columnNumber, fileName, delimiter: ' ', error: '' };
-};
-
-const isPositiveInteger = num => {
-  const zero = 0;
-  return Number.isInteger(+num) && +num > zero;
 };
 
 const sortOnFile = (fs, sortOptions) => {

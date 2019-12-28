@@ -9,14 +9,14 @@ const {
 } = require('../src/sortLib');
 
 describe('sortRows', () => {
-  it('Should give sorted form of given fileContent with options delimiter " "', () => {
+  it('Should give rows sorted by given field of given unsorted rows', () => {
     const lines = [['j 5 z'], ['i 4 y'], ['h 3 x'], ['g 2 w'], ['f 1 v']];
     const columnNumber = '3';
     const actual = sortRows(lines, columnNumber);
     const expected = [['f 1 v'], ['g 2 w'], ['h 3 x'], ['i 4 y'], ['j 5 z']];
     assert.deepStrictEqual(actual, expected);
   });
-  it('Should give normally sorted data if specified field is more than the line length', () => {
+  it('Should give rows sorted normally if given field is not present', () => {
     const lines = [['j 5 z'], ['i 4 y'], ['h 3 x'], ['g 2 w'], ['f 1 v']];
     const columnNumber = '5';
     const actual = sortRows(lines, columnNumber);
@@ -26,7 +26,7 @@ describe('sortRows', () => {
 });
 
 describe('parseUserArgs', () => {
-  it('Should give parsed User Options if given column number is a positive number', () => {
+  it('Should give parsed User Options for given positive column number', () => {
     const actual = parseUserArgs(['-k', '1', './docs/sampleFile.txt']);
     const expected = {
       fileName: './docs/sampleFile.txt',
@@ -52,25 +52,28 @@ describe('sort', () => {
   it('Should give sorted Data of given File if exists', () => {
     const userArgs = ['-k', '1', './docs/sampleFile.txt'];
     const readFileSync = fileName => {
-      return 'a 9\nb 8\nc 7\nd 6\ne 5\nf 4\ng 3\nh 2\ni 1\n9 a\n8 b\n7 c\n6 d\n5 e\n4 f\n3 g\n2 h\n1 i\na b\nb c\nc d\nd e\ne f\nf g\ng h\nh i\ni j';
+      assert.strictEqual(fileName, './docs/sampleFile.txt');
+      return 'a 9\nb 8\nc 7\nd 6\n4 f\n3 g\n2 h\n1 i\na b\nb c\nc d\nd e';
     };
-    const existsSync = filePath => {
+    const existsSync = fileName => {
+      assert.strictEqual(fileName, './docs/sampleFile.txt');
       return true;
     };
     const actual = sort(userArgs, { readFileSync, existsSync });
     const expected = {
-      sortedLines:
-        '1 i\n2 h\n3 g\n4 f\n5 e\n6 d\n7 c\n8 b\n9 a\na 9\na b\nb 8\nb c\nc 7\nc d\nd 6\nd e\ne 5\ne f\nf 4\nf g\ng 3\ng h\nh 2\nh i\ni 1\ni j',
+      sortedLines: '1 i\n2 h\n3 g\n4 f\na 9\na b\nb 8\nb c\nc 7\nc d\nd 6\nd e',
       error: ''
     };
     assert.deepStrictEqual(actual, expected);
   });
-  it('Should give normally sorted data if specified field is more than the line length', () => {
+  it('Should give data sorted normally for absent field', () => {
     const userArgs = ['-k', '5', './docs/sampleFile.txt'];
     const readFileSync = fileName => {
+      assert.strictEqual(fileName, './docs/sampleFile.txt');
       return 'j 5 z\ni 4 y\nh 3 x\ng 2 w\nf 1 v';
     };
-    const existsSync = filePath => {
+    const existsSync = fileName => {
+      assert.strictEqual(fileName, './docs/sampleFile.txt');
       return true;
     };
     const actual = sort(userArgs, { readFileSync, existsSync });
@@ -83,20 +86,24 @@ describe('sort', () => {
   it('Should give empty string for empty file', () => {
     const userArgs = ['-k', '1', './docs/sampleFile.txt'];
     const readFileSync = fileName => {
+      assert.strictEqual(fileName, './docs/sampleFile.txt');
       return '';
     };
-    const existsSync = filePath => {
+    const existsSync = fileName => {
+      assert.strictEqual(fileName, './docs/sampleFile.txt');
       return true;
     };
     const actual = sort(userArgs, { readFileSync, existsSync });
     assert.deepStrictEqual(actual, { sortedLines: '', error: '' });
   });
-  it("Should give error message if file doesn't exist", () => {
+  it('Should give error message if file does not exist', () => {
     const userArgs = ['-k', '1', './docs/sampleFile.txt'];
     const readFileSync = fileName => {
+      assert.strictEqual(fileName, './docs/sampleFile.txt');
       return 'a 9\nb 8';
     };
-    const existsSync = filePath => {
+    const existsSync = fileName => {
+      assert.strictEqual(fileName, './docs/sampleFile.txt');
       return false;
     };
     const actual = sort(userArgs, { readFileSync, existsSync });
@@ -109,9 +116,11 @@ describe('sort', () => {
   it('Should give error is invalid column number is given', () => {
     const userArgs = ['-k', '-1', './docs/sampleFile.txt'];
     const readFileSync = fileName => {
+      assert.strictEqual(fileName, './docs/sampleFile.txt');
       return 'a 9\nb 8';
     };
-    const existsSync = filePath => {
+    const existsSync = fileName => {
+      assert.strictEqual(fileName, './docs/sampleFile.txt');
       return true;
     };
     const actual = sort(userArgs, { readFileSync, existsSync });
