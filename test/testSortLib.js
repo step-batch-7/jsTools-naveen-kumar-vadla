@@ -9,7 +9,7 @@ const {
 } = require('../src/sortLib');
 
 describe('sortRows', () => {
-  it("Should give sorted form of given fileContent with options delimiter ' '", () => {
+  it('Should give sorted form of given fileContent with options delimiter " "', () => {
     const lines = [['j 5 z'], ['i 4 y'], ['h 3 x'], ['g 2 w'], ['f 1 v']];
     const columnNumber = '3';
     const actual = sortRows(lines, columnNumber);
@@ -38,12 +38,12 @@ describe('parseUserArgs', () => {
   });
   it('Should give error if given column number is not a number', () => {
     const actual = parseUserArgs(['-k', 'a', './docs/sampleFile.txt']);
-    const expected = { error: `sort: -k a: Invalid argument` };
+    const expected = { error: 'sort: -k a: Invalid argument' };
     assert.deepStrictEqual(actual, expected);
   });
   it('Should give error if given column number is a negative number', () => {
     const actual = parseUserArgs(['-k', '-1', './docs/sampleFile.txt']);
-    const expected = { error: `sort: -k -1: Invalid argument` };
+    const expected = { error: 'sort: -k -1: Invalid argument' };
     assert.deepStrictEqual(actual, expected);
   });
 });
@@ -102,7 +102,7 @@ describe('sort', () => {
     const actual = sort(userArgs, { readFileSync, existsSync });
     const expected = {
       sortedLines: '',
-      error: `sort: No such file or directory`
+      error: 'sort: No such file or directory'
     };
     assert.deepStrictEqual(actual, expected);
   });
@@ -117,7 +117,7 @@ describe('sort', () => {
     const actual = sort(userArgs, { readFileSync, existsSync });
     const expected = {
       sortedLines: '',
-      error: `sort: -k -1: Invalid argument`
+      error: 'sort: -k -1: Invalid argument'
     };
     assert.deepStrictEqual(actual, expected);
   });
@@ -125,11 +125,11 @@ describe('sort', () => {
 
 describe('isPositiveInteger', () => {
   it('Should give true if given number is a positive integer', () => {
-    const actual = isPositiveInteger(1);
+    const actual = isPositiveInteger('1');
     assert.ok(actual);
   });
   it('Should give false if given number is a negative integer', () => {
-    const actual = isPositiveInteger(-1);
+    const actual = isPositiveInteger('-1');
     assert.notOk(actual);
   });
   it('Should give false if given number is not a integer', () => {
