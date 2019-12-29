@@ -2,139 +2,139 @@
 
 const { assert } = require('chai');
 const { performSort, Sort } = require('../src/sortLib');
+describe('Sort', () => {
+  describe('parseUserArgs', () => {
+    it('Should give no error for valid columnNumber', () => {
+      const sort = new Sort();
+      const actual = sort.parseUserArgs(['-k', '1', './docs/sampleFile.txt']);
+      assert.deepStrictEqual(actual, '');
+      assert.strictEqual(sort.columnNumber, '1');
+      assert.strictEqual(sort.delimiter, ' ');
+      assert.strictEqual(sort.fileName, './docs/sampleFile.txt');
+    });
+    it('Should give error if given column number is not a number', () => {
+      const sort = new Sort();
+      const actual = sort.parseUserArgs(['-k', 'a', './docs/sampleFile.txt']);
+      assert.deepStrictEqual(actual, 'sort: -k a: Invalid argument');
+    });
+    it('Should give error if given column number is a negative number', () => {
+      const sort = new Sort();
+      const actual = sort.parseUserArgs(['-k', '-1', './docs/sampleFile.txt']);
+      assert.deepStrictEqual(actual, 'sort: -k -1: Invalid argument');
+    });
+  });
 
-describe('parseUserArgs', () => {
-  it('Should give no error for valid columnNumber', () => {
-    const sort = new Sort();
-    const actual = sort.parseUserArgs(['-k', '1', './docs/sampleFile.txt']);
-    assert.deepStrictEqual(actual, '');
-    assert.strictEqual(sort.columnNumber, '1');
-    assert.strictEqual(sort.delimiter, ' ');
-    assert.strictEqual(sort.fileName, './docs/sampleFile.txt');
+  describe('isValidField', () => {
+    it('Should give true if given number is a positive integer', () => {
+      const sort = new Sort();
+      sort.columnNumber = '1';
+      const actual = sort.isValidField();
+      assert.ok(actual);
+    });
+    it('Should give false if given number is a negative integer', () => {
+      const sort = new Sort();
+      sort.columnNumber = '-1';
+      const actual = sort.isValidField();
+      assert.notOk(actual);
+    });
+    it('Should give false if given number is not a integer', () => {
+      const sort = new Sort();
+      sort.columnNumber = 'a';
+      const actual = sort.isValidField();
+      assert.notOk(actual);
+    });
   });
-  it('Should give error if given column number is not a number', () => {
-    const sort = new Sort();
-    const actual = sort.parseUserArgs(['-k', 'a', './docs/sampleFile.txt']);
-    assert.deepStrictEqual(actual, 'sort: -k a: Invalid argument');
+
+  describe('compareRows', () => {
+    it('Should give 0 if field of given rows are equal', () => {
+      const sort = new Sort();
+      const row1 = ['a b'];
+      const row2 = ['a b'];
+      const actual = sort.compareRows(row1, row2);
+      const expected = 0;
+      assert.strictEqual(actual, expected);
+    });
+    it('Should give 1 if field of given row1 is greater', () => {
+      const sort = new Sort();
+      const row1 = ['c b'];
+      const row2 = ['a b'];
+      const actual = sort.compareRows(row1, row2);
+      const expected = 1;
+      assert.strictEqual(actual, expected);
+    });
+    it('Should give -1 if field of given row2 is greater', () => {
+      const sort = new Sort();
+      const row1 = ['a b'];
+      const row2 = ['c b'];
+      const actual = sort.compareRows(row1, row2);
+      const expected = -1;
+      assert.strictEqual(actual, expected);
+    });
   });
-  it('Should give error if given column number is a negative number', () => {
-    const sort = new Sort();
-    const actual = sort.parseUserArgs(['-k', '-1', './docs/sampleFile.txt']);
-    assert.deepStrictEqual(actual, 'sort: -k -1: Invalid argument');
+
+  describe('sortOnFile', () => {
+    it('Should give sorted data of given File if exists', () => {
+      const sort = new Sort();
+      sort.columnNumber = '1';
+      sort.delimiter = ' ';
+      sort.fileName = './docs/sampleFile.txt';
+      const readFileSync = fileName => {
+        assert.strictEqual(fileName, './docs/sampleFile.txt');
+        return 'a 9\nb 8\n2 h\n1 i\na b\nb c';
+      };
+      const existsSync = fileName => {
+        assert.strictEqual(fileName, './docs/sampleFile.txt');
+        return true;
+      };
+      const actual = sort.sortOnFile({ readFileSync, existsSync });
+      const expected = {
+        sortedLines: ['1 i', '2 h', 'a 9', 'a b', 'b 8', 'b c'],
+        error: ''
+      };
+      assert.deepStrictEqual(actual, expected);
+    });
+    it('Should give data sorted normally for absent field', () => {
+      const sort = new Sort();
+      sort.columnNumber = '5';
+      sort.delimiter = ' ';
+      sort.fileName = './docs/sampleFile.txt';
+      const readFileSync = fileName => {
+        assert.strictEqual(fileName, './docs/sampleFile.txt');
+        return 'a 9\nb 8\n2 h\n1 i\na b\nb c';
+      };
+      const existsSync = fileName => {
+        assert.strictEqual(fileName, './docs/sampleFile.txt');
+        return true;
+      };
+      const actual = sort.sortOnFile({ readFileSync, existsSync });
+      const expected = {
+        sortedLines: ['1 i', '2 h', 'a 9', 'a b', 'b 8', 'b c'],
+        error: ''
+      };
+      assert.deepStrictEqual(actual, expected);
+    });
+    it('Should give error if file is not present', () => {
+      const sort = new Sort();
+      sort.columnNumber = '5';
+      sort.delimiter = ' ';
+      sort.fileName = './docs/sampleFile.txt';
+      const readFileSync = fileName => {
+        assert.strictEqual(fileName, './docs/sampleFile.txt');
+        return 'a 9\nb 8\n2 h\n1 i\na b\nb c';
+      };
+      const existsSync = fileName => {
+        assert.strictEqual(fileName, './docs/sampleFile.txt');
+        return false;
+      };
+      const actual = sort.sortOnFile({ readFileSync, existsSync });
+      const expected = {
+        sortedLines: '',
+        error: 'sort: No such file or directory'
+      };
+      assert.deepStrictEqual(actual, expected);
+    });
   });
 });
-
-describe('isValidField', () => {
-  it('Should give true if given number is a positive integer', () => {
-    const sort = new Sort();
-    sort.columnNumber = '1';
-    const actual = sort.isValidField();
-    assert.ok(actual);
-  });
-  it('Should give false if given number is a negative integer', () => {
-    const sort = new Sort();
-    sort.columnNumber = '-1';
-    const actual = sort.isValidField();
-    assert.notOk(actual);
-  });
-  it('Should give false if given number is not a integer', () => {
-    const sort = new Sort();
-    sort.columnNumber = 'a';
-    const actual = sort.isValidField();
-    assert.notOk(actual);
-  });
-});
-
-describe('compareRows', () => {
-  it('Should give 0 if field of given rows are equal', () => {
-    const sort = new Sort();
-    const row1 = ['a b'];
-    const row2 = ['a b'];
-    const actual = sort.compareRows(row1, row2);
-    const expected = 0;
-    assert.strictEqual(actual, expected);
-  });
-  it('Should give 1 if field of given row1 is greater', () => {
-    const sort = new Sort();
-    const row1 = ['c b'];
-    const row2 = ['a b'];
-    const actual = sort.compareRows(row1, row2);
-    const expected = 1;
-    assert.strictEqual(actual, expected);
-  });
-  it('Should give -1 if field of given row2 is greater', () => {
-    const sort = new Sort();
-    const row1 = ['a b'];
-    const row2 = ['c b'];
-    const actual = sort.compareRows(row1, row2);
-    const expected = -1;
-    assert.strictEqual(actual, expected);
-  });
-});
-
-describe('sortOnFile', () => {
-  it('Should give sorted data of given File if exists', () => {
-    const sort = new Sort();
-    sort.columnNumber = '1';
-    sort.delimiter = ' ';
-    sort.fileName = './docs/sampleFile.txt';
-    const readFileSync = fileName => {
-      assert.strictEqual(fileName, './docs/sampleFile.txt');
-      return 'a 9\nb 8\n2 h\n1 i\na b\nb c';
-    };
-    const existsSync = fileName => {
-      assert.strictEqual(fileName, './docs/sampleFile.txt');
-      return true;
-    };
-    const actual = sort.sortOnFile({ readFileSync, existsSync });
-    const expected = {
-      sortedLines: ['1 i', '2 h', 'a 9', 'a b', 'b 8', 'b c'],
-      error: ''
-    };
-    assert.deepStrictEqual(actual, expected);
-  });
-  it('Should give data sorted normally for absent field', () => {
-    const sort = new Sort();
-    sort.columnNumber = '5';
-    sort.delimiter = ' ';
-    sort.fileName = './docs/sampleFile.txt';
-    const readFileSync = fileName => {
-      assert.strictEqual(fileName, './docs/sampleFile.txt');
-      return 'a 9\nb 8\n2 h\n1 i\na b\nb c';
-    };
-    const existsSync = fileName => {
-      assert.strictEqual(fileName, './docs/sampleFile.txt');
-      return true;
-    };
-    const actual = sort.sortOnFile({ readFileSync, existsSync });
-    const expected = {
-      sortedLines: ['1 i', '2 h', 'a 9', 'a b', 'b 8', 'b c'],
-      error: ''
-    };
-    assert.deepStrictEqual(actual, expected);
-  });
-  it('Should give error if file is not present', () => {
-    const sort = new Sort();
-    sort.columnNumber = '5';
-    sort.delimiter = ' ';
-    sort.fileName = './docs/sampleFile.txt';
-    const readFileSync = fileName => {
-      assert.strictEqual(fileName, './docs/sampleFile.txt');
-      return 'a 9\nb 8\n2 h\n1 i\na b\nb c';
-    };
-    const existsSync = fileName => {
-      assert.strictEqual(fileName, './docs/sampleFile.txt');
-      return false;
-    };
-    const actual = sort.sortOnFile({ readFileSync, existsSync });
-    const expected = {
-      sortedLines: '',
-      error: 'sort: No such file or directory'
-    };
-    assert.deepStrictEqual(actual, expected);
-  });
-});
-
 describe('performSort', () => {
   it('Should give sorted data of given File if exists', () => {
     const userArgs = ['-k', '1', './docs/sampleFile.txt'];
