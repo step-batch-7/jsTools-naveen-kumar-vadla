@@ -27,3 +27,13 @@ Tasks :
     --format file content (formatLines)
 --done-- -->get The content of fileName
 --done-- -->parse user options (parseUserArgs)
+
+
+v0.2
+  cat fileName | node ./sort.js -k 2 fileName 
+  
+Tasks:
+  -->sortOnStdin
+  -->decide operation in performSort
+      -either sort in file or sort on stdin
+  -->Add a logger function and pass it from main

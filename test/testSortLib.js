@@ -2,6 +2,7 @@
 
 const { assert } = require('chai');
 const { performSort, Sort } = require('../src/sortLib');
+
 describe('Sort', () => {
   describe('parseUserArgs', () => {
     it('Should give no error for valid columnNumber', () => {
