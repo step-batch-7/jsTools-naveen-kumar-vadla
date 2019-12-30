@@ -1,20 +1,10 @@
 'use strict';
 
 class Sort {
-  constructor() {
-    this.columnNumber = 1;
-    this.delimiter = ' ';
-  }
-  isValidField() {
-    const zero = 0;
-    return Number.isInteger(+this.columnNumber) && +this.columnNumber > zero;
-  }
-  parseUserArgs(userArgs) {
-    [, this.columnNumber, this.fileName] = userArgs;
-    if (!this.isValidField(this.columnNumber)) {
-      return `sort: -k ${this.columnNumber}: Invalid argument`;
-    }
-    return '';
+  constructor(parsedUserArgs) {
+    this.columnNumber = parsedUserArgs.columnNumber;
+    this.delimiter = parsedUserArgs.delimiter;
+    this.fileName = parsedUserArgs.fileName;
   }
   compareRows(row1, row2) {
     const one = 1;
@@ -44,12 +34,31 @@ class Sort {
   }
 }
 
-const performSort = (userArgs, fs) => {
-  const sort = new Sort();
-  const error = sort.parseUserArgs(userArgs);
-  if (error) {
-    return { error, sortedLines: '' };
+const isValidField = columnNumber => {
+  const zero = 0;
+  return Number.isInteger(+columnNumber) && +columnNumber > zero;
+};
+
+const parseUserArgs = userArgs => {
+  const delimiter = ' ';
+  const [, columnNumber, fileName] = userArgs;
+  if (!isValidField(columnNumber)) {
+    return {
+      error: `sort: -k ${columnNumber}: Invalid argument`,
+      columnNumber,
+      fileName,
+      delimiter
+    };
   }
+  return { error: '', fileName, columnNumber, delimiter };
+};
+
+const performSort = (userArgs, fs) => {
+  const parsedUserArgs = parseUserArgs(userArgs);
+  if (parsedUserArgs.error) {
+    return { error: parsedUserArgs.error, sortedLines: '' };
+  }
+  const sort = new Sort(parsedUserArgs);
   const sortedFileLines = sort.sortOnFile(fs);
   if (sortedFileLines.error) {
     return { error: sortedFileLines.error, sortedLines: '' };
@@ -57,4 +66,4 @@ const performSort = (userArgs, fs) => {
   return { sortedLines: sortedFileLines.sortedLines.join('\n'), error: '' };
 };
 
-module.exports = { performSort, Sort };
+module.exports = { performSort, Sort, isValidField, parseUserArgs };
