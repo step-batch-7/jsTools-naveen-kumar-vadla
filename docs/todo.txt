@@ -33,7 +33,12 @@ v0.2
   cat fileName | node ./sort.js -k 2 fileName 
   
 Tasks:
-  -->sortOnStdin
-  -->decide operation in performSort
-      -either sort in file or sort on stdin
-  -->Add a logger function and pass it from main
+--done--    -->Extract parseUserArgs and isValidField functions to outside the class
+--done--    -->Modify test cases for parseUserArgs and isValidField
+    -->extract file reading and sorting to separate Functions
+    -->Have a common sortLines for both stdin and fileContent
+    -->Pass a logger function from main to log the result 
+    -->Pass a readStream from main 
+    -->Use readStream for reading both stdin and fileContent
+    -->Testing of logger function
+    -->Introduce sinon in test cases

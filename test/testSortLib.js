@@ -13,27 +13,21 @@ describe('Sort', () => {
     it('Should give 0 if field of given rows are equal', () => {
       const parsedUserOptions = { columnNumber: 1 };
       const sort = new Sort(parsedUserOptions);
-      const row1 = ['a b'];
-      const row2 = ['a b'];
-      const actual = sort.compareRows(row1, row2);
+      const actual = sort.compareRows(['a b'], ['a b']);
       const expected = 0;
       assert.strictEqual(actual, expected);
     });
     it('Should give 1 if field of given row1 is greater', () => {
       const parsedUserOptions = { columnNumber: 1 };
       const sort = new Sort(parsedUserOptions);
-      const row1 = ['c b'];
-      const row2 = ['a b'];
-      const actual = sort.compareRows(row1, row2);
+      const actual = sort.compareRows(['c b'], ['a b']);
       const expected = 1;
       assert.strictEqual(actual, expected);
     });
     it('Should give -1 if field of given row2 is greater', () => {
       const parsedUserOptions = { columnNumber: 1 };
       const sort = new Sort(parsedUserOptions);
-      const row1 = ['a b'];
-      const row2 = ['c b'];
-      const actual = sort.compareRows(row1, row2);
+      const actual = sort.compareRows(['a b'], ['c b']);
       const expected = -1;
       assert.strictEqual(actual, expected);
     });
