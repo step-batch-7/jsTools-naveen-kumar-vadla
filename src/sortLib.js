@@ -22,10 +22,11 @@ class Sort {
     return zero;
   }
   sortLines(lines) {
+    lines = lines.replace(/\n$/, '').split('\n');
     const rows = lines.map(line => line.split(this.delimiter));
     rows.sort(this.compareRows.bind(this));
     const sortedLines = rows.map(row => row.join(this.delimiter));
-    return sortedLines;
+    return sortedLines.join('\n');
   }
 }
 
@@ -33,7 +34,7 @@ const getFileLines = (fs, fileName) => {
   if (!fs.existsSync(fileName)) {
     return { error: 'sort: No such file or directory', lines: '' };
   }
-  const lines = fs.readFileSync(fileName, 'utf-8').split('\n');
+  const lines = fs.readFileSync(fileName, 'utf-8');
   return { lines, error: '' };
 };
 
@@ -67,7 +68,7 @@ const performSort = (userArgs, fs) => {
     return { error: fileContent.error, sortedLines: '' };
   }
   const sortedLines = sort.sortLines(fileContent.lines);
-  return { sortedLines: sortedLines.join('\n'), error: '' };
+  return { sortedLines, error: '' };
 };
 
 module.exports = {

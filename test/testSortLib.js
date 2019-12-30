@@ -33,7 +33,7 @@ describe('Sort', () => {
       assert.strictEqual(actual, expected);
     });
   });
-  describe('sortOnFile', () => {
+  describe('sortLines', () => {
     it('Should give sorted lines if given field is present', () => {
       const parsedUserOptions = {
         columnNumber: '1',
@@ -41,9 +41,9 @@ describe('Sort', () => {
         fileName: './docs/sampleFile.txt'
       };
       const sort = new Sort(parsedUserOptions);
-      const lines = ['a 9', 'b 8', '2 h', '1 i', 'a b', 'b c'];
+      const lines = 'a 9\nb 8\n2 h\n1 i\na b\nb c';
       const actual = sort.sortLines(lines);
-      const expected = ['1 i', '2 h', 'a 9', 'a b', 'b 8', 'b c'];
+      const expected = '1 i\n2 h\na 9\na b\nb 8\nb c';
       assert.deepStrictEqual(actual, expected);
     });
     it('Should give data sorted normally for absent field', () => {
@@ -53,9 +53,9 @@ describe('Sort', () => {
         fileName: './docs/sampleFile.txt'
       };
       const sort = new Sort(parsedUserOptions);
-      const lines = ['a 9', 'b 8', '2 h', '1 i', 'a b', 'b c'];
+      const lines = 'a 9\nb 8\n2 h\n1 i\na b\nb c';
       const actual = sort.sortLines(lines);
-      const expected = ['1 i', '2 h', 'a 9', 'a b', 'b 8', 'b c'];
+      const expected = '1 i\n2 h\na 9\na b\nb 8\nb c';
       assert.deepStrictEqual(actual, expected);
     });
   });
@@ -73,7 +73,7 @@ describe('getFileLines', () => {
     };
     const actual = getFileLines({ readFileSync, existsSync }, fileName);
     const expected = {
-      lines: ['a 9', 'b 8', '2 h', '1 i', 'a b', 'b c'],
+      lines: 'a 9\nb 8\n2 h\n1 i\na b\nb c',
       error: ''
     };
     assert.deepStrictEqual(actual, expected);
