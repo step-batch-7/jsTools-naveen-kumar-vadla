@@ -21,8 +21,8 @@ class Sort {
     }
     return zero;
   }
-  sortLines(lines) {
-    lines = lines.replace(/\n$/, '').split('\n');
+  sortLines(content) {
+    const lines = content.replace(/\n$/, '').split('\n');
     const rows = lines.map(line => line.split(this.delimiter));
     rows.sort(this.compareRows.bind(this));
     const sortedLines = rows.map(row => row.join(this.delimiter));
@@ -72,8 +72,8 @@ const performSort = (userArgs, fs) => {
 };
 
 module.exports = {
-  performSort,
   Sort,
+  performSort,
   isValidField,
   parseUserArgs,
   getFileLines

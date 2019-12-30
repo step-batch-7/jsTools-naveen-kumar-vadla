@@ -2,8 +2,8 @@
 
 const { assert } = require('chai');
 const {
-  performSort,
   Sort,
+  performSort,
   parseUserArgs,
   isValidField,
   getFileLines
@@ -35,28 +35,24 @@ describe('Sort', () => {
   });
   describe('sortLines', () => {
     it('Should give sorted lines if given field is present', () => {
-      const parsedUserOptions = {
-        columnNumber: '1',
-        delimiter: ' ',
-        fileName: './docs/sampleFile.txt'
-      };
-      const sort = new Sort(parsedUserOptions);
+      const columnNumber = '1';
+      const delimiter = ' ';
+      const fileName = './docs/sampleFile.txt';
+      const sort = new Sort({ columnNumber, delimiter, fileName });
       const lines = 'a 9\nb 8\n2 h\n1 i\na b\nb c';
       const actual = sort.sortLines(lines);
       const expected = '1 i\n2 h\na 9\na b\nb 8\nb c';
-      assert.deepStrictEqual(actual, expected);
+      assert.strictEqual(actual, expected);
     });
     it('Should give data sorted normally for absent field', () => {
-      const parsedUserOptions = {
-        columnNumber: '5',
-        delimiter: ' ',
-        fileName: './docs/sampleFile.txt'
-      };
-      const sort = new Sort(parsedUserOptions);
+      const columnNumber = '5';
+      const delimiter = ' ';
+      const fileName = './docs/sampleFile.txt';
+      const sort = new Sort({ columnNumber, delimiter, fileName });
       const lines = 'a 9\nb 8\n2 h\n1 i\na b\nb c';
       const actual = sort.sortLines(lines);
       const expected = '1 i\n2 h\na 9\na b\nb 8\nb c';
-      assert.deepStrictEqual(actual, expected);
+      assert.strictEqual(actual, expected);
     });
   });
 });
@@ -182,32 +178,29 @@ describe('performSort', () => {
 describe('parseUserArgs', () => {
   it('Should give no error for valid columnNumber', () => {
     const actual = parseUserArgs(['-k', '1', './docs/sampleFile.txt']);
-    const expected = {
-      columnNumber: '1',
-      delimiter: ' ',
-      fileName: './docs/sampleFile.txt',
-      error: ''
-    };
+    const columnNumber = '1';
+    const delimiter = ' ';
+    const fileName = './docs/sampleFile.txt';
+    const error = '';
+    const expected = { columnNumber, delimiter, fileName, error };
     assert.deepStrictEqual(actual, expected);
   });
   it('Should give error if given column number is not a number', () => {
     const actual = parseUserArgs(['-k', 'a', './docs/sampleFile.txt']);
-    const expected = {
-      columnNumber: 'a',
-      fileName: './docs/sampleFile.txt',
-      delimiter: ' ',
-      error: 'sort: -k a: Invalid argument'
-    };
+    const columnNumber = 'a';
+    const fileName = './docs/sampleFile.txt';
+    const delimiter = ' ';
+    const error = 'sort: -k a: Invalid argument';
+    const expected = { columnNumber, delimiter, fileName, error };
     assert.deepStrictEqual(actual, expected);
   });
   it('Should give error if given column number is a negative number', () => {
     const actual = parseUserArgs(['-k', '-1', './docs/sampleFile.txt']);
-    const expected = {
-      columnNumber: '-1',
-      fileName: './docs/sampleFile.txt',
-      delimiter: ' ',
-      error: 'sort: -k -1: Invalid argument'
-    };
+    const columnNumber = '-1';
+    const fileName = './docs/sampleFile.txt';
+    const delimiter = ' ';
+    const error = 'sort: -k -1: Invalid argument';
+    const expected = { columnNumber, delimiter, fileName, error };
     assert.deepStrictEqual(actual, expected);
   });
 });
