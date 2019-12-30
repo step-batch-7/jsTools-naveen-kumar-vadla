@@ -37,8 +37,8 @@ Tasks:
 --done--    -->Modify test cases for parseUserArgs and isValidField
 --done--    -->extract file reading and sorting to separate Functions
 --done--    -->Have a common sortLines for both stdin and fileContent
-    -->Introduce sinon in test cases
-    -->Pass a logger function from main to log the result 
+--done--    -->Pass a logger function from main to log the result 
     -->Pass a readStream from main 
     -->Use readStream for reading both stdin and fileContent
     -->Testing of logger function
+    -->Introduce sinon in test cases

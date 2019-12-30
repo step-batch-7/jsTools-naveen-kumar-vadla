@@ -57,18 +57,18 @@ const parseUserArgs = userArgs => {
   return { error: '', fileName, columnNumber, delimiter };
 };
 
-const performSort = (userArgs, fs) => {
+const performSort = (userArgs, fs, onSortCompletion) => {
   const parsedUserArgs = parseUserArgs(userArgs);
   if (parsedUserArgs.error) {
-    return { error: parsedUserArgs.error, sortedLines: '' };
+    return onSortCompletion({ error: parsedUserArgs.error, sortedLines: '' });
   }
   const sort = new Sort(parsedUserArgs);
   const fileContent = getFileLines(fs, parsedUserArgs.fileName);
   if (fileContent.error) {
-    return { error: fileContent.error, sortedLines: '' };
+    return onSortCompletion({ error: fileContent.error, sortedLines: '' });
   }
   const sortedLines = sort.sortLines(fileContent.lines);
-  return { sortedLines, error: '' };
+  return onSortCompletion({ sortedLines, error: '' });
 };
 
 module.exports = {
