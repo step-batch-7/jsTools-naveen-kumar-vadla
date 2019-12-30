@@ -5,7 +5,8 @@ const {
   performSort,
   Sort,
   parseUserArgs,
-  isValidField
+  isValidField,
+  getFileLines
 } = require('../src/sortLib');
 
 describe('Sort', () => {
@@ -33,26 +34,16 @@ describe('Sort', () => {
     });
   });
   describe('sortOnFile', () => {
-    it('Should give sorted data of given File if exists', () => {
+    it('Should give sorted lines if given field is present', () => {
       const parsedUserOptions = {
         columnNumber: '1',
         delimiter: ' ',
         fileName: './docs/sampleFile.txt'
       };
       const sort = new Sort(parsedUserOptions);
-      const readFileSync = fileName => {
-        assert.strictEqual(fileName, './docs/sampleFile.txt');
-        return 'a 9\nb 8\n2 h\n1 i\na b\nb c';
-      };
-      const existsSync = fileName => {
-        assert.strictEqual(fileName, './docs/sampleFile.txt');
-        return true;
-      };
-      const actual = sort.sortOnFile({ readFileSync, existsSync });
-      const expected = {
-        sortedLines: ['1 i', '2 h', 'a 9', 'a b', 'b 8', 'b c'],
-        error: ''
-      };
+      const lines = ['a 9', 'b 8', '2 h', '1 i', 'a b', 'b c'];
+      const actual = sort.sortLines(lines);
+      const expected = ['1 i', '2 h', 'a 9', 'a b', 'b 8', 'b c'];
       assert.deepStrictEqual(actual, expected);
     });
     it('Should give data sorted normally for absent field', () => {
@@ -62,43 +53,47 @@ describe('Sort', () => {
         fileName: './docs/sampleFile.txt'
       };
       const sort = new Sort(parsedUserOptions);
-      const readFileSync = fileName => {
-        assert.strictEqual(fileName, './docs/sampleFile.txt');
-        return 'a 9\nb 8\n2 h\n1 i\na b\nb c';
-      };
-      const existsSync = fileName => {
-        assert.strictEqual(fileName, './docs/sampleFile.txt');
-        return true;
-      };
-      const actual = sort.sortOnFile({ readFileSync, existsSync });
-      const expected = {
-        sortedLines: ['1 i', '2 h', 'a 9', 'a b', 'b 8', 'b c'],
-        error: ''
-      };
+      const lines = ['a 9', 'b 8', '2 h', '1 i', 'a b', 'b c'];
+      const actual = sort.sortLines(lines);
+      const expected = ['1 i', '2 h', 'a 9', 'a b', 'b 8', 'b c'];
       assert.deepStrictEqual(actual, expected);
     });
-    it('Should give error if file is not present', () => {
-      const parsedUserOptions = {
-        columnNumber: '5',
-        delimiter: ' ',
-        fileName: './docs/sampleFile.txt'
-      };
-      const sort = new Sort(parsedUserOptions);
-      const readFileSync = fileName => {
-        assert.strictEqual(fileName, './docs/sampleFile.txt');
-        return 'a 9\nb 8\n2 h\n1 i\na b\nb c';
-      };
-      const existsSync = fileName => {
-        assert.strictEqual(fileName, './docs/sampleFile.txt');
-        return false;
-      };
-      const actual = sort.sortOnFile({ readFileSync, existsSync });
-      const expected = {
-        sortedLines: '',
-        error: 'sort: No such file or directory'
-      };
-      assert.deepStrictEqual(actual, expected);
-    });
+  });
+});
+describe('getFileLines', () => {
+  it('Should give file content if file is present', () => {
+    const fileName = './docs/sampleFile.txt';
+    const readFileSync = fileName => {
+      assert.strictEqual(fileName, './docs/sampleFile.txt');
+      return 'a 9\nb 8\n2 h\n1 i\na b\nb c';
+    };
+    const existsSync = fileName => {
+      assert.strictEqual(fileName, './docs/sampleFile.txt');
+      return true;
+    };
+    const actual = getFileLines({ readFileSync, existsSync }, fileName);
+    const expected = {
+      lines: ['a 9', 'b 8', '2 h', '1 i', 'a b', 'b c'],
+      error: ''
+    };
+    assert.deepStrictEqual(actual, expected);
+  });
+  it('Should give error message if file is not present', () => {
+    const fileName = './docs/sampleFile.txt';
+    const readFileSync = fileName => {
+      assert.strictEqual(fileName, './docs/sampleFile.txt');
+      return 'a 9\nb 8\n2 h\n1 i\na b\nb c';
+    };
+    const existsSync = fileName => {
+      assert.strictEqual(fileName, './docs/sampleFile.txt');
+      return false;
+    };
+    const actual = getFileLines({ readFileSync, existsSync }, fileName);
+    const expected = {
+      error: 'sort: No such file or directory',
+      lines: ''
+    };
+    assert.deepStrictEqual(actual, expected);
   });
 });
 describe('performSort', () => {

@@ -21,18 +21,21 @@ class Sort {
     }
     return zero;
   }
-  sortOnFile(fs) {
-    let sortedLines = '';
-    if (!fs.existsSync(this.fileName)) {
-      return { error: 'sort: No such file or directory', sortedLines };
-    }
-    const lines = fs.readFileSync(this.fileName, 'utf-8').split('\n');
+  sortLines(lines) {
     const rows = lines.map(line => line.split(this.delimiter));
     rows.sort(this.compareRows.bind(this));
-    sortedLines = rows.map(row => row.join(this.delimiter));
-    return { sortedLines, error: '' };
+    const sortedLines = rows.map(row => row.join(this.delimiter));
+    return sortedLines;
   }
 }
+
+const getFileLines = (fs, fileName) => {
+  if (!fs.existsSync(fileName)) {
+    return { error: 'sort: No such file or directory', lines: '' };
+  }
+  const lines = fs.readFileSync(fileName, 'utf-8').split('\n');
+  return { lines, error: '' };
+};
 
 const isValidField = columnNumber => {
   const zero = 0;
@@ -59,11 +62,18 @@ const performSort = (userArgs, fs) => {
     return { error: parsedUserArgs.error, sortedLines: '' };
   }
   const sort = new Sort(parsedUserArgs);
-  const sortedFileLines = sort.sortOnFile(fs);
-  if (sortedFileLines.error) {
-    return { error: sortedFileLines.error, sortedLines: '' };
+  const fileContent = getFileLines(fs, parsedUserArgs.fileName);
+  if (fileContent.error) {
+    return { error: fileContent.error, sortedLines: '' };
   }
-  return { sortedLines: sortedFileLines.sortedLines.join('\n'), error: '' };
+  const sortedLines = sort.sortLines(fileContent.lines);
+  return { sortedLines: sortedLines.join('\n'), error: '' };
 };
 
-module.exports = { performSort, Sort, isValidField, parseUserArgs };
+module.exports = {
+  performSort,
+  Sort,
+  isValidField,
+  parseUserArgs,
+  getFileLines
+};

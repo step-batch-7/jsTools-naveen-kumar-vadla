@@ -16,17 +16,17 @@ Features:
 v0.1
   node ./sort.js -k 2 fileName 
 --done--    -->Create Files and directories :
-        directories: src , test , appTests
-        files : sort.js , src/sortLib.js , test/testSortLib.js
+                directories: src , test , appTests
+                files : sort.js , src/sortLib.js , test/testSortLib.js
 --done--    -->npm init
 --done--    -->Check Connections : mocha , nyc 
 --done--    -->Modules : chai
 
 Tasks : 
---done-- -->sort Content based by given field (sortRows)
-    --format file content (formatLines)
---done-- -->get The content of fileName
---done-- -->parse user options (parseUserArgs)
+--done--    -->sort Content based by given field (sortRows)
+                --format file content (formatLines)
+--done--    -->get The content of fileName
+--done--    -->parse user options (parseUserArgs)
 
 
 v0.2
@@ -42,3 +42,4 @@ Tasks:
     -->Use readStream for reading both stdin and fileContent
     -->Testing of logger function
     -->Introduce sinon in test cases
+    
