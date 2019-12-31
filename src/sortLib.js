@@ -21,12 +21,12 @@ class Sort {
     }
     return zero;
   }
-  sortLines(content, onSortCompletion) {
+  sortLines(content) {
     const lines = content.replace(/\n$/, '').split('\n');
     const rows = lines.map(line => line.split(this.delimiter));
     rows.sort(this.compareRows.bind(this));
     const sortedLines = rows.map(row => row.join(this.delimiter));
-    return onSortCompletion({ sortedLines: sortedLines.join('\n'), error: '' });
+    return sortedLines.join('\n');
   }
 }
 
@@ -75,7 +75,10 @@ const performSort = (userArgs, streams, onSortCompletion) => {
   inputStream.on('data', line => {
     content += line.toString();
   });
-  inputStream.on('end', () => sort.sortLines(content, onSortCompletion));
+  inputStream.on('end', () => {
+    const sortedLines = sort.sortLines(content, onSortCompletion);
+    onSortCompletion({ sortedLines, error: '' });
+  });
 };
 
 module.exports = {
