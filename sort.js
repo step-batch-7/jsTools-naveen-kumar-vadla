@@ -3,7 +3,7 @@
 const { createReadStream } = require('fs');
 const { stdin, stdout, stderr } = process;
 
-const { performSort } = require('./src/sortLib');
+const { performSort } = require('./src/performSort');
 
 const onSortCompletion = ({ sortedLines, error }) => {
   stdout.write(sortedLines);
