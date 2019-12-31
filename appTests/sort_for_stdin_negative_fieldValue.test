@@ -1,0 +1,2 @@
+(cat ./docs/sampleFile.txt | node ./sort.js -k -5 )
+sort: -k -5: Invalid argument

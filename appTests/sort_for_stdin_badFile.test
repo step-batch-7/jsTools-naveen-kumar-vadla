@@ -1,0 +1,2 @@
+(cat badFile.txt | node ./sort.js -k 1 )
+cat: badFile.txt: No such file or directory

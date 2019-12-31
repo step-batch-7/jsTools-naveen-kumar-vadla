@@ -1,0 +1,2 @@
+(cat ./docs/sampleFile.txt | node ./sort.js -k abcd )
+sort: -k abcd: Invalid argument
