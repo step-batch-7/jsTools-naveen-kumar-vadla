@@ -27,14 +27,15 @@ const loadContentAndSort = (inputStream, sort, onSortCompletion) => {
 };
 
 const performSort = (userArgs, streams, onSortCompletion) => {
+  const { createReadStream, createStdinStream } = streams;
   const { error, fileName, columnNumber, delimiter } = parseUserArgs(userArgs);
   if (error) {
     return onSortCompletion({ error, sortedLines: '' });
   }
   const sort = new Sort({ fileName, columnNumber, delimiter });
   const inputStream = fileName
-    ? streams.createReadStream(fileName)
-    : streams.createStdinStream();
+    ? createReadStream(fileName)
+    : createStdinStream();
   loadContentAndSort(inputStream, sort, onSortCompletion);
 };
 
