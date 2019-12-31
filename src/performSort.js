@@ -25,17 +25,22 @@ const loadContentAndSort = (inputStream, sort, onSortCompletion) => {
   });
 };
 
-const performSort = (userArgs, streams, onSortCompletion) => {
+const getInputStream = (fileName, streams) => {
   const { createReadStream, createStdinStream } = streams;
+  if (fileName) {
+    return createReadStream(fileName);
+  }
+  return createStdinStream();
+};
+
+const performSort = (userArgs, streams, onSortCompletion) => {
   const { error, fileName, columnNumber, delimiter } = parseUserArgs(userArgs);
   if (error) {
     onSortCompletion({ error, sortedLines: '' });
     return;
   }
   const sort = new Sort({ fileName, columnNumber, delimiter });
-  const inputStream = fileName
-    ? createReadStream(fileName)
-    : createStdinStream();
+  const inputStream = getInputStream(fileName, streams);
   loadContentAndSort(inputStream, sort, onSortCompletion);
 };
 
