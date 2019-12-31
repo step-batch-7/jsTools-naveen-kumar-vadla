@@ -21,12 +21,12 @@ class Sort {
     }
     return zero;
   }
-  sortLines(content) {
+  sortLines(content, onSortCompletion) {
     const lines = content.replace(/\n$/, '').split('\n');
     const rows = lines.map(line => line.split(this.delimiter));
     rows.sort(this.compareRows.bind(this));
     const sortedLines = rows.map(row => row.join(this.delimiter));
-    return sortedLines.join('\n');
+    return onSortCompletion({ sortedLines: sortedLines.join('\n'), error: '' });
   }
 }
 
@@ -67,8 +67,7 @@ const performSort = (userArgs, fs, onSortCompletion) => {
   if (fileContent.error) {
     return onSortCompletion({ error: fileContent.error, sortedLines: '' });
   }
-  const sortedLines = sort.sortLines(fileContent.lines);
-  return onSortCompletion({ sortedLines, error: '' });
+  sort.sortLines(fileContent.lines, onSortCompletion);
 };
 
 module.exports = {

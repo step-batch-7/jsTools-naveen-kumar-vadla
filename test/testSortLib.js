@@ -36,14 +36,15 @@ describe('Sort', () => {
   });
   describe('sortLines', () => {
     it('Should give sorted lines if given field is present', () => {
-      const columnNumber = '1';
+      const columnNumber = '2';
       const delimiter = ' ';
       const fileName = './docs/sampleFile.txt';
       const sort = new Sort({ columnNumber, delimiter, fileName });
       const lines = 'a 9\nb 8\n2 h\n1 i\na b\nb c';
-      const actual = sort.sortLines(lines);
-      const expected = '1 i\n2 h\na 9\na b\nb 8\nb c';
-      assert.strictEqual(actual, expected);
+      const onSortComplete = sinon.fake();
+      sort.sortLines(lines, onSortComplete);
+      const sortedLines = 'b 8\na 9\na b\nb c\n2 h\n1 i';
+      assert.ok(onSortComplete.calledWith({ sortedLines, error: '' }));
     });
     it('Should give data sorted normally for absent field', () => {
       const columnNumber = '5';
@@ -51,9 +52,10 @@ describe('Sort', () => {
       const fileName = './docs/sampleFile.txt';
       const sort = new Sort({ columnNumber, delimiter, fileName });
       const lines = 'a 9\nb 8\n2 h\n1 i\na b\nb c';
-      const actual = sort.sortLines(lines);
-      const expected = '1 i\n2 h\na 9\na b\nb 8\nb c';
-      assert.strictEqual(actual, expected);
+      const onSortComplete = sinon.fake();
+      sort.sortLines(lines, onSortComplete);
+      const sortedLines = '1 i\n2 h\na 9\na b\nb 8\nb c';
+      assert.ok(onSortComplete.calledWith({ sortedLines, error: '' }));
     });
   });
 });
