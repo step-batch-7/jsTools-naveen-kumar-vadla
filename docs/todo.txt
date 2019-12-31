@@ -29,6 +29,7 @@ Tasks :
 --done--    -->parse user options (parseUserArgs)
 
 
+-----------------------
 v0.2
   cat fileName | node ./sort.js -k 2 fileName 
   
@@ -43,4 +44,5 @@ Tasks:
 --done--    -->Pass a readStream from main 
 --done--    -->Use readStream for reading both stdin and fileContent
 --done--    -->Add tests for stdin
-    -->Found a bug has to fix
+--done--    -->Passing createStdinStream function from main
+--pending-- -->Found a bug has to fix
