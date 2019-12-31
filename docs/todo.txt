@@ -42,3 +42,5 @@ Tasks:
 --done--    -->Testing of logger function
 --done--    -->Pass a readStream from main 
 --done--    -->Use readStream for reading both stdin and fileContent
+    -->Add tests for stdin
+    -->Found a bug has to fix
