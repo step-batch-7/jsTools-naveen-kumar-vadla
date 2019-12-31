@@ -173,39 +173,36 @@ describe('performSort', () => {
   });
   describe('Operation on stdin', () => {
     it('Should give sorted data of given stdin content', () => {
-      const userArgs = ['-k', '1', './docs/sampleFile.txt'];
+      const userArgs = ['-k', '1'];
       const sortedLines = '1 i\n2 h\na 9\na b\nb 8\nb c';
       const onSortCompletion = sinon.fake();
       const stdin = new EventEmitter();
-      const createReadStream = sinon.fake.returns(stdin);
-      performSort(userArgs, { createReadStream }, onSortCompletion);
+      performSort(userArgs, { stdin }, onSortCompletion);
       stdin.emit('data', 'a 9\n1 i\nb 8\n2 h\na b\nb c\n');
       stdin.emit('end');
       assert.ok(onSortCompletion.calledWith({ sortedLines, error: '' }));
     });
     it('Should give data sorted normally for absent field', () => {
-      const userArgs = ['-k', '1', './docs/sampleFile.txt'];
+      const userArgs = ['-k', '1'];
       const sortedLines = 'g 2 w\nh 3 x\ni 4 y\nj 5 z';
       const onSortCompletion = sinon.fake();
       const stdin = new EventEmitter();
-      const createReadStream = sinon.fake.returns(stdin);
-      performSort(userArgs, { createReadStream }, onSortCompletion);
+      performSort(userArgs, { stdin }, onSortCompletion);
       stdin.emit('data', 'j 5 z\ni 4 y\ng 2 w\nh 3 x');
       stdin.emit('end');
       assert.ok(onSortCompletion.calledWith({ sortedLines, error: '' }));
     });
     it('Should give empty string for empty data', () => {
-      const userArgs = ['-k', '1', './docs/sampleFile.txt'];
+      const userArgs = ['-k', '1'];
       const onSortCompletion = sinon.fake();
       const stdin = new EventEmitter();
-      const createReadStream = sinon.fake.returns(stdin);
-      performSort(userArgs, { createReadStream }, onSortCompletion);
+      performSort(userArgs, { stdin }, onSortCompletion);
       stdin.emit('data', '');
       stdin.emit('end');
       assert.ok(onSortCompletion.calledWith({ sortedLines: '', error: '' }));
     });
     it('Should give error for invalid column number', () => {
-      const userArgs = ['-k', '-1', './docs/sampleFile.txt'];
+      const userArgs = ['-k', '-1'];
       const error = 'sort: -k -1: Invalid argument';
       const onSortCompletion = sinon.fake();
       performSort(userArgs, {}, onSortCompletion);
