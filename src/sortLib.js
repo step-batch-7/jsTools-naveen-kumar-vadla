@@ -58,16 +58,8 @@ const getErrorMessage = errorCode => {
   return errorMessages[errorCode];
 };
 
-const performSort = (userArgs, streams, onSortCompletion) => {
-  const { error, fileName, columnNumber, delimiter } = parseUserArgs(userArgs);
-  if (error) {
-    return onSortCompletion({ error, sortedLines: '' });
-  }
-  const sort = new Sort({ fileName, columnNumber, delimiter });
+const loadContentAndSort = (inputStream, sort, onSortCompletion) => {
   let content = '';
-  const inputStream = fileName
-    ? streams.createReadStream(fileName)
-    : streams.stdin;
   inputStream.on('error', error => {
     const streamError = getErrorMessage(error.code);
     onSortCompletion({ sortedLines: '', error: streamError });
@@ -79,6 +71,18 @@ const performSort = (userArgs, streams, onSortCompletion) => {
     const sortedLines = sort.sortLines(content, onSortCompletion);
     onSortCompletion({ sortedLines, error: '' });
   });
+};
+
+const performSort = (userArgs, streams, onSortCompletion) => {
+  const { error, fileName, columnNumber, delimiter } = parseUserArgs(userArgs);
+  if (error) {
+    return onSortCompletion({ error, sortedLines: '' });
+  }
+  const sort = new Sort({ fileName, columnNumber, delimiter });
+  const inputStream = fileName
+    ? streams.createReadStream(fileName)
+    : streams.createStdinStream();
+  loadContentAndSort(inputStream, sort, onSortCompletion);
 };
 
 module.exports = {

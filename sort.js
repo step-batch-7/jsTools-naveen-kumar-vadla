@@ -10,9 +10,12 @@ const onSortCompletion = ({ sortedLines, error }) => {
   stderr.write(error);
 };
 
+const createStdinStream = () => stdin;
+
 const main = () => {
   const [, , ...userArgs] = process.argv;
-  performSort(userArgs, { createReadStream, stdin }, onSortCompletion);
+  const streams = { createReadStream, createStdinStream };
+  performSort(userArgs, streams, onSortCompletion);
 };
 
 main();

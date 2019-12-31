@@ -185,7 +185,8 @@ describe('performSort', () => {
       const sortedLines = '1 i\n2 h\na 9\na b\nb 8\nb c';
       const onSortCompletion = sinon.fake();
       const stdin = new EventEmitter();
-      performSort(userArgs, { stdin }, onSortCompletion);
+      const createStdinStream = sinon.fake.returns(stdin);
+      performSort(userArgs, { createStdinStream }, onSortCompletion);
       stdin.emit('data', 'a 9\n1 i\nb 8\n2 h\na b\nb c\n');
       stdin.emit('end');
       assert.ok(onSortCompletion.calledWith({ sortedLines, error: '' }));
@@ -195,7 +196,8 @@ describe('performSort', () => {
       const sortedLines = 'g 2 w\nh 3 x\ni 4 y\nj 5 z';
       const onSortCompletion = sinon.fake();
       const stdin = new EventEmitter();
-      performSort(userArgs, { stdin }, onSortCompletion);
+      const createStdinStream = sinon.fake.returns(stdin);
+      performSort(userArgs, { createStdinStream }, onSortCompletion);
       stdin.emit('data', 'j 5 z\ni 4 y\ng 2 w\nh 3 x');
       stdin.emit('end');
       assert.ok(onSortCompletion.calledWith({ sortedLines, error: '' }));
@@ -204,7 +206,8 @@ describe('performSort', () => {
       const userArgs = ['-k', '1'];
       const onSortCompletion = sinon.fake();
       const stdin = new EventEmitter();
-      performSort(userArgs, { stdin }, onSortCompletion);
+      const createStdinStream = sinon.fake.returns(stdin);
+      performSort(userArgs, { createStdinStream }, onSortCompletion);
       stdin.emit('data', '');
       stdin.emit('end');
       assert.ok(onSortCompletion.calledWith({ sortedLines: '', error: '' }));
