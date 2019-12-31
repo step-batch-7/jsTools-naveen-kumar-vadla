@@ -3,11 +3,10 @@
 const { parseUserArgs, Sort } = require('./sortLib');
 
 const getErrorMessage = errorCode => {
-  const errorMessages = {
-    ENOENT: 'sort: No such file or directory',
-    EISDIR: 'sort: Is a directory',
-    EACCES: 'sort: Permission denied'
-  };
+  const errorMessages = {};
+  errorMessages.ENOENT = 'sort: No such file or directory';
+  errorMessages.EISDIR = 'sort: Is a directory';
+  errorMessages.EACCES = 'sort: Permission denied';
   return errorMessages[errorCode];
 };
 
