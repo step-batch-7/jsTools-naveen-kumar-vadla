@@ -7,7 +7,8 @@ const {
   Sort,
   performSort,
   parseUserArgs,
-  isValidField
+  isValidField,
+  getErrorMessage
 } = require('../src/sortLib');
 
 describe('Sort', () => {
@@ -97,6 +98,15 @@ describe('isValidField', () => {
   });
   it('Should give false if given number is not a integer', () => {
     assert.notOk(isValidField('a'));
+  });
+});
+describe('getErrorMessage', () => {
+  it('Should error for given error code', () => {
+    assert.strictEqual(getErrorMessage('EISDIR'), 'sort: Is a directory');
+    assert.strictEqual(getErrorMessage('EACCES'), 'sort: Permission denied');
+  });
+  it('Should give undefined for if error code is not present', () => {
+    assert.isUndefined(getErrorMessage('ERROR'));
   });
 });
 describe('performSort', () => {
