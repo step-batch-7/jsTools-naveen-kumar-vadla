@@ -8,9 +8,10 @@
     "test": "test"
   },
   "scripts": {
-    "test": "mocha && eslint src test",
+    "test": "mocha",
+    "lintTest": "eslint src test",
     "appTest": "./runAppTests.sh ./appTests/*.test",
-    "alltests": "npm test && npm run appTest"
+    "allTests": "npm test && npm run lintTest && npm run appTest"
   },
   "repository": {
     "type": "git",
