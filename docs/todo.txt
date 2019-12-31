@@ -40,5 +40,5 @@ Tasks:
 --done--    -->Pass a logger function from main to log the result 
 --done--    -->Introduce sinon in test cases
 --done--    -->Testing of logger function
-    -->Pass a readStream from main 
-    -->Use readStream for reading both stdin and fileContent
+--done--    -->Pass a readStream from main 
+--done--    -->Use readStream for reading both stdin and fileContent

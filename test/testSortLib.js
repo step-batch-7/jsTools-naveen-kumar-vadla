@@ -2,12 +2,12 @@
 
 const { assert } = require('chai');
 const sinon = require('sinon');
+const { EventEmitter } = require('events');
 const {
   Sort,
   performSort,
   parseUserArgs,
-  isValidField,
-  getFileLines
+  isValidField
 } = require('../src/sortLib');
 
 describe('Sort', () => {
@@ -99,71 +99,47 @@ describe('isValidField', () => {
     assert.notOk(isValidField('a'));
   });
 });
-describe('getFileLines', () => {
-  it('Should give file content if file is present', () => {
-    const fileName = './docs/sampleFile.txt';
-    const readFileSync = sinon.fake.returns('a 9\nb 8\n2 h\n1 i\na b\nb c');
-    const existsSync = sinon.fake.returns(true);
-    const actual = getFileLines({ readFileSync, existsSync }, fileName);
-    const expected = { lines: 'a 9\nb 8\n2 h\n1 i\na b\nb c', error: '' };
-    assert.ok(readFileSync.calledWith(fileName));
-    assert.ok(existsSync.calledWith(fileName));
-    assert.deepStrictEqual(actual, expected);
-  });
-  it('Should give error message if file is not present', () => {
-    const fileName = './docs/sampleFile.txt';
-    const existsSync = sinon.fake.returns(false);
-    const actual = getFileLines({ existsSync }, fileName);
-    const expected = { error: 'sort: No such file or directory', lines: '' };
-    assert.ok(existsSync.calledWith(fileName));
-    assert.deepStrictEqual(actual, expected);
-  });
-});
 describe('performSort', () => {
   it('Should give sorted data of given File if exists', () => {
     const userArgs = ['-k', '1', './docs/sampleFile.txt'];
-    const fileName = './docs/sampleFile.txt';
     const sortedLines = '1 i\n2 h\na 9\na b\nb 8\nb c';
-    const readFileSync = sinon.fake.returns('a 9\nb 8\n2 h\n1 i\na b\nb c');
-    const existsSync = sinon.fake.returns(true);
     const onSortCompletion = sinon.fake();
-    performSort(userArgs, { readFileSync, existsSync }, onSortCompletion);
-    assert.ok(readFileSync.calledWith(fileName));
-    assert.ok(existsSync.calledWith(fileName));
+    const fileReadStream = new EventEmitter();
+    const createReadStream = sinon.fake.returns(fileReadStream);
+    performSort(userArgs, { createReadStream }, onSortCompletion);
+    fileReadStream.emit('data', 'a 9\n1 i\nb 8\n2 h\na b\nb c\n');
+    fileReadStream.emit('end');
     assert.ok(onSortCompletion.calledWith({ sortedLines, error: '' }));
   });
   it('Should give data sorted normally for absent field', () => {
     const userArgs = ['-k', '1', './docs/sampleFile.txt'];
-    const fileName = './docs/sampleFile.txt';
     const sortedLines = 'g 2 w\nh 3 x\ni 4 y\nj 5 z';
-    const readFileSync = sinon.fake.returns('j 5 z\ni 4 y\nh 3 x\ng 2 w');
-    const existsSync = sinon.fake.returns(true);
     const onSortCompletion = sinon.fake();
-    performSort(userArgs, { readFileSync, existsSync }, onSortCompletion);
-    assert.ok(readFileSync.calledWith(fileName));
-    assert.ok(existsSync.calledWith(fileName));
+    const fileReadStream = new EventEmitter();
+    const createReadStream = sinon.fake.returns(fileReadStream);
+    performSort(userArgs, { createReadStream }, onSortCompletion);
+    fileReadStream.emit('data', 'j 5 z\ni 4 y\ng 2 w\nh 3 x');
+    fileReadStream.emit('end');
     assert.ok(onSortCompletion.calledWith({ sortedLines, error: '' }));
   });
   it('Should give empty string for empty file', () => {
     const userArgs = ['-k', '1', './docs/sampleFile.txt'];
-    const fileName = './docs/sampleFile.txt';
-    const readFileSync = sinon.fake.returns('');
-    const existsSync = sinon.fake.returns(true);
     const onSortCompletion = sinon.fake();
-    performSort(userArgs, { readFileSync, existsSync }, onSortCompletion);
-    assert.ok(readFileSync.calledWith(fileName));
-    assert.ok(existsSync.calledWith(fileName));
+    const fileReadStream = new EventEmitter();
+    const createReadStream = sinon.fake.returns(fileReadStream);
+    performSort(userArgs, { createReadStream }, onSortCompletion);
+    fileReadStream.emit('data', '');
+    fileReadStream.emit('end');
     assert.ok(onSortCompletion.calledWith({ sortedLines: '', error: '' }));
-    performSort(userArgs, { readFileSync, existsSync }, onSortCompletion);
   });
   it('Should give error message if file does not exist', () => {
     const userArgs = ['-k', '1', './docs/sampleFile.txt'];
-    const fileName = './docs/sampleFile.txt';
     const error = 'sort: No such file or directory';
-    const existsSync = sinon.fake.returns(false);
     const onSortCompletion = sinon.fake();
-    performSort(userArgs, { existsSync }, onSortCompletion);
-    assert.ok(existsSync.calledWith(fileName));
+    const fileReadStream = new EventEmitter();
+    const createReadStream = sinon.fake.returns(fileReadStream);
+    performSort(userArgs, { createReadStream }, onSortCompletion);
+    fileReadStream.emit('error', { code: 'ENOENT' });
     assert.ok(onSortCompletion.calledWith({ sortedLines: '', error }));
   });
   it('Should give error is invalid column number is given', () => {

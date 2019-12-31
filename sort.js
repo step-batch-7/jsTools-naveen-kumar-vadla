@@ -1,7 +1,7 @@
 'use strict';
 
-const fs = require('fs');
-const { stdout, stderr } = process;
+const { createReadStream } = require('fs');
+const { stdin, stdout, stderr } = process;
 
 const { performSort } = require('./src/sortLib');
 
@@ -12,7 +12,7 @@ const onSortCompletion = ({ sortedLines, error }) => {
 
 const main = () => {
   const [, , ...userArgs] = process.argv;
-  performSort(userArgs, fs, onSortCompletion);
+  performSort(userArgs, { createReadStream, stdin }, onSortCompletion);
 };
 
 main();

@@ -30,14 +30,6 @@ class Sort {
   }
 }
 
-const getFileLines = (fs, fileName) => {
-  if (!fs.existsSync(fileName)) {
-    return { error: 'sort: No such file or directory', lines: '' };
-  }
-  const lines = fs.readFileSync(fileName, 'utf-8');
-  return { lines, error: '' };
-};
-
 const isValidField = columnNumber => {
   const zero = 0;
   return Number.isInteger(+columnNumber) && +columnNumber > zero;
@@ -57,17 +49,33 @@ const parseUserArgs = userArgs => {
   return { error: '', fileName, columnNumber, delimiter };
 };
 
-const performSort = (userArgs, fs, onSortCompletion) => {
-  const parsedUserArgs = parseUserArgs(userArgs);
-  if (parsedUserArgs.error) {
-    return onSortCompletion({ error: parsedUserArgs.error, sortedLines: '' });
+const getErrorMessage = errorCode => {
+  const errorMessages = {
+    ENOENT: 'sort: No such file or directory',
+    EISDIR: 'sort: Is a directory',
+    EACCES: 'sort: Permission denied'
+  };
+  return errorMessages[errorCode];
+};
+
+const performSort = (userArgs, streams, onSortCompletion) => {
+  const { error, fileName, columnNumber, delimiter } = parseUserArgs(userArgs);
+  if (error) {
+    return onSortCompletion({ error, sortedLines: '' });
   }
-  const sort = new Sort(parsedUserArgs);
-  const fileContent = getFileLines(fs, parsedUserArgs.fileName);
-  if (fileContent.error) {
-    return onSortCompletion({ error: fileContent.error, sortedLines: '' });
-  }
-  sort.sortLines(fileContent.lines, onSortCompletion);
+  const sort = new Sort({ fileName, columnNumber, delimiter });
+  let content = '';
+  const inputStream = fileName
+    ? streams.createReadStream(fileName)
+    : streams.stdin;
+  inputStream.on('error', error => {
+    const streamError = getErrorMessage(error.code);
+    onSortCompletion({ sortedLines: '', error: streamError });
+  });
+  inputStream.on('data', line => {
+    content += line.toString();
+  });
+  inputStream.on('end', () => sort.sortLines(content, onSortCompletion));
 };
 
 module.exports = {
@@ -75,5 +83,5 @@ module.exports = {
   performSort,
   isValidField,
   parseUserArgs,
-  getFileLines
+  getErrorMessage
 };
