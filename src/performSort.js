@@ -29,7 +29,8 @@ const performSort = (userArgs, streams, onSortCompletion) => {
   const { createReadStream, createStdinStream } = streams;
   const { error, fileName, columnNumber, delimiter } = parseUserArgs(userArgs);
   if (error) {
-    return onSortCompletion({ error, sortedLines: '' });
+    onSortCompletion({ error, sortedLines: '' });
+    return;
   }
   const sort = new Sort({ fileName, columnNumber, delimiter });
   const inputStream = fileName
