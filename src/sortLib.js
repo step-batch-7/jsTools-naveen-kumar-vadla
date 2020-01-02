@@ -32,7 +32,7 @@ class Sort {
     let content = '';
     inputStream.setEncoding('utf8');
     inputStream.on('error', error => {
-      const streamError = getErrorMessage(error.code);
+      const streamError = this.getErrorMessage(error.code);
       onSortCompletion({ sortedLines: '', error: streamError });
     });
     inputStream.on('data', line => {
@@ -43,15 +43,14 @@ class Sort {
       onSortCompletion({ sortedLines, error: '' });
     });
   }
+  getErrorMessage(errorCode) {
+    this.errorMessages = {};
+    this.errorMessages.ENOENT = 'sort: No such file or directory';
+    this.errorMessages.EISDIR = 'sort: Is a directory';
+    this.errorMessages.EACCES = 'sort: Permission denied';
+    return this.errorMessages[errorCode];
+  }
 }
-
-const getErrorMessage = errorCode => {
-  const errorMessages = {};
-  errorMessages.ENOENT = 'sort: No such file or directory';
-  errorMessages.EISDIR = 'sort: Is a directory';
-  errorMessages.EACCES = 'sort: Permission denied';
-  return errorMessages[errorCode];
-};
 
 const isValidField = columnNumber => {
   const zero = 0;
@@ -71,4 +70,4 @@ const parseUserArgs = userArgs => {
   return { error: '', fileName, columnNumber, delimiter };
 };
 
-module.exports = { Sort, isValidField, parseUserArgs, getErrorMessage };
+module.exports = { Sort, isValidField, parseUserArgs };

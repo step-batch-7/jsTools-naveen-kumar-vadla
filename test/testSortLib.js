@@ -2,12 +2,7 @@
 
 const { assert } = require('chai');
 const sinon = require('sinon');
-const {
-  Sort,
-  parseUserArgs,
-  isValidField,
-  getErrorMessage
-} = require('../src/sortLib');
+const { Sort, parseUserArgs, isValidField } = require('../src/sortLib');
 
 describe('Sort', () => {
   describe('compareRows', () => {
@@ -145,6 +140,27 @@ describe('Sort', () => {
       assert.ok(onSortCompletion.calledWith({ error: '', sortedLines: '' }));
     });
   });
+  describe('getErrorMessage', () => {
+    it('Should error for given error code EISDIR', () => {
+      const sort = new Sort({});
+      const error = 'sort: Is a directory';
+      assert.strictEqual(sort.getErrorMessage('EISDIR'), error);
+    });
+    it('Should error for given error code EISDIR', () => {
+      const sort = new Sort({});
+      const error = 'sort: Permission denied';
+      assert.strictEqual(sort.getErrorMessage('EACCES'), error);
+    });
+    it('Should error for given error code EISDIR', () => {
+      const sort = new Sort({});
+      const error = 'sort: No such file or directory';
+      assert.strictEqual(sort.getErrorMessage('ENOENT'), error);
+    });
+    it('Should give undefined for if error code is not present', () => {
+      const sort = new Sort({});
+      assert.isUndefined(sort.getErrorMessage('ERROR'));
+    });
+  });
 });
 describe('parseUserArgs', () => {
   it('Should give no error for valid columnNumber', () => {
@@ -194,14 +210,5 @@ describe('isValidField', () => {
   });
   it('Should give false if given number is not a integer', () => {
     assert.notOk(isValidField('a'));
-  });
-});
-describe('getErrorMessage', () => {
-  it('Should error for given error code', () => {
-    assert.strictEqual(getErrorMessage('EISDIR'), 'sort: Is a directory');
-    assert.strictEqual(getErrorMessage('EACCES'), 'sort: Permission denied');
-  });
-  it('Should give undefined for if error code is not present', () => {
-    assert.isUndefined(getErrorMessage('ERROR'));
   });
 });
