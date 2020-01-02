@@ -13,7 +13,7 @@
     "appTest": "./runAppTests.sh ./appTests/*.test",
     "allTests": "npm test && npm run linterTest && npm run appTest",
     "watch": "mocha --watch --growl",
-    "getLinter": "curl -s  https://raw.githubusercontent.com/blpabhishek/eslintrc-config/master/.eslintrc.json -o .eslintrc.json && eslint src test *.js"
+    "getLinter": "curl -s  https://raw.githubusercontent.com/blpabhishek/eslintrc-config/master/.eslintrc.json -o .eslintrc.json"
   },
   "repository": {
     "type": "git",
