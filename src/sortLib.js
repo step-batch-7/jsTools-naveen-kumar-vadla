@@ -28,7 +28,29 @@ class Sort {
     const sortedLines = rows.map(row => row.join(this.delimiter));
     return sortedLines.join('\n');
   }
+  loadContentAndSort(inputStream, onSortCompletion) {
+    let content = '';
+    inputStream.on('error', error => {
+      const streamError = getErrorMessage(error.code);
+      onSortCompletion({ sortedLines: '', error: streamError });
+    });
+    inputStream.on('data', line => {
+      content += line.toString();
+    });
+    inputStream.on('end', () => {
+      const sortedLines = this.sortLines(content, onSortCompletion);
+      onSortCompletion({ sortedLines, error: '' });
+    });
+  }
 }
+
+const getErrorMessage = errorCode => {
+  const errorMessages = {};
+  errorMessages.ENOENT = 'sort: No such file or directory';
+  errorMessages.EISDIR = 'sort: Is a directory';
+  errorMessages.EACCES = 'sort: Permission denied';
+  return errorMessages[errorCode];
+};
 
 const isValidField = columnNumber => {
   const zero = 0;
@@ -49,4 +71,4 @@ const parseUserArgs = userArgs => {
   return { error: '', fileName, columnNumber, delimiter };
 };
 
-module.exports = { Sort, isValidField, parseUserArgs };
+module.exports = { Sort, isValidField, parseUserArgs, getErrorMessage };

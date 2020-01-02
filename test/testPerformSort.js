@@ -3,17 +3,8 @@
 const { assert } = require('chai');
 const sinon = require('sinon');
 const { EventEmitter } = require('events');
-const { performSort, getErrorMessage } = require('../src/performSort');
+const { performSort } = require('../src/performSort');
 
-describe('getErrorMessage', () => {
-  it('Should error for given error code', () => {
-    assert.strictEqual(getErrorMessage('EISDIR'), 'sort: Is a directory');
-    assert.strictEqual(getErrorMessage('EACCES'), 'sort: Permission denied');
-  });
-  it('Should give undefined for if error code is not present', () => {
-    assert.isUndefined(getErrorMessage('ERROR'));
-  });
-});
 describe('performSort', () => {
   describe('Operation on file', () => {
     it('Should give sorted data of given File if exists', () => {
