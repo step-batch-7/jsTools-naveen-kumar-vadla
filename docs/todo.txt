@@ -46,5 +46,5 @@ Tasks:
 --done--    -->Add tests for stdin
 --done--    -->Passing createStdinStream function from main
 --done--    -->Introduce beforeEach in tests
---pending-- -->Remove EventEmitters in tests
+--done--    -->Remove EventEmitters in tests
 --pending-- -->Found a bug has to fix
