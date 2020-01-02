@@ -2,7 +2,6 @@
 
 const { assert } = require('chai');
 const sinon = require('sinon');
-const { EventEmitter } = require('events');
 const {
   Sort,
   parseUserArgs,
@@ -59,7 +58,7 @@ describe('Sort', () => {
   describe('loadContentAndSort', () => {
     let inputStream, onSortCompletion;
     beforeEach(() => {
-      inputStream = new EventEmitter();
+      inputStream = { setEncoding: sinon.fake(), on: sinon.fake() };
       onSortCompletion = sinon.fake();
     });
     it('Should give error if file is not present', () => {
@@ -69,7 +68,9 @@ describe('Sort', () => {
       const error = 'sort: No such file or directory';
       const sort = new Sort({ columnNumber, delimiter, fileName });
       sort.loadContentAndSort(inputStream, onSortCompletion);
-      inputStream.emit('error', { code: 'ENOENT' });
+      inputStream.on.firstCall.args[1]({ code: 'ENOENT' });
+      assert.strictEqual(inputStream.on.firstCall.args[0], 'error');
+      assert.ok(inputStream.setEncoding.calledWith('utf8'));
       assert.ok(onSortCompletion.calledWith({ error, sortedLines: '' }));
     });
     it('Should give error if a directory given as fileName', () => {
@@ -79,7 +80,9 @@ describe('Sort', () => {
       const error = 'sort: Is a directory';
       const sort = new Sort({ columnNumber, delimiter, fileName });
       sort.loadContentAndSort(inputStream, onSortCompletion);
-      inputStream.emit('error', { code: 'EISDIR' });
+      inputStream.on.firstCall.args[1]({ code: 'EISDIR' });
+      assert.strictEqual(inputStream.on.firstCall.args[0], 'error');
+      assert.ok(inputStream.setEncoding.calledWith('utf8'));
       assert.ok(onSortCompletion.calledWith({ error, sortedLines: '' }));
     });
     it('Should give error if file permissions are missing ', () => {
@@ -89,7 +92,9 @@ describe('Sort', () => {
       const error = 'sort: Permission denied';
       const sort = new Sort({ columnNumber, delimiter, fileName });
       sort.loadContentAndSort(inputStream, onSortCompletion);
-      inputStream.emit('error', { code: 'EACCES' });
+      inputStream.on.firstCall.args[1]({ code: 'EACCES' });
+      assert.strictEqual(inputStream.on.firstCall.args[0], 'error');
+      assert.ok(inputStream.setEncoding.calledWith('utf8'));
       assert.ok(onSortCompletion.calledWith({ error, sortedLines: '' }));
     });
     it('Should give sorted lines for valid file and columnNumber', () => {
@@ -98,8 +103,11 @@ describe('Sort', () => {
       const fileName = './docs/sampleFile.txt';
       const sort = new Sort({ columnNumber, delimiter, fileName });
       sort.loadContentAndSort(inputStream, onSortCompletion);
-      inputStream.emit('data', 'b a\na b');
-      inputStream.emit('end');
+      inputStream.on.secondCall.args[1]('b a\na b');
+      inputStream.on.thirdCall.args[1]();
+      assert.strictEqual(inputStream.on.secondCall.args[0], 'data');
+      assert.strictEqual(inputStream.on.thirdCall.args[0], 'end');
+      assert.ok(inputStream.setEncoding.calledWith('utf8'));
       assert.ok(
         onSortCompletion.calledWith({ error: '', sortedLines: 'a b\nb a' })
       );
@@ -110,8 +118,11 @@ describe('Sort', () => {
       const fileName = './docs/sampleFile.txt';
       const sort = new Sort({ columnNumber, delimiter, fileName });
       sort.loadContentAndSort(inputStream, onSortCompletion);
-      inputStream.emit('data', 'b a\na b');
-      inputStream.emit('end');
+      inputStream.on.secondCall.args[1]('b a\na b');
+      inputStream.on.thirdCall.args[1]();
+      assert.strictEqual(inputStream.on.secondCall.args[0], 'data');
+      assert.strictEqual(inputStream.on.thirdCall.args[0], 'end');
+      assert.ok(inputStream.setEncoding.calledWith('utf8'));
       assert.ok(
         onSortCompletion.calledWith({ error: '', sortedLines: 'a b\nb a' })
       );
@@ -122,8 +133,11 @@ describe('Sort', () => {
       const fileName = './docs/sampleFile.txt';
       const sort = new Sort({ columnNumber, delimiter, fileName });
       sort.loadContentAndSort(inputStream, onSortCompletion);
-      inputStream.emit('data', '');
-      inputStream.emit('end');
+      inputStream.on.secondCall.args[1]('');
+      inputStream.on.thirdCall.args[1]();
+      assert.strictEqual(inputStream.on.secondCall.args[0], 'data');
+      assert.strictEqual(inputStream.on.thirdCall.args[0], 'end');
+      assert.ok(inputStream.setEncoding.calledWith('utf8'));
       assert.ok(onSortCompletion.calledWith({ error: '', sortedLines: '' }));
     });
   });

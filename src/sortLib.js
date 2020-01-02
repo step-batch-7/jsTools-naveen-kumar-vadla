@@ -30,12 +30,13 @@ class Sort {
   }
   loadContentAndSort(inputStream, onSortCompletion) {
     let content = '';
+    inputStream.setEncoding('utf8');
     inputStream.on('error', error => {
       const streamError = getErrorMessage(error.code);
       onSortCompletion({ sortedLines: '', error: streamError });
     });
     inputStream.on('data', line => {
-      content += line.toString();
+      content += line;
     });
     inputStream.on('end', () => {
       const sortedLines = this.sortLines(content, onSortCompletion);

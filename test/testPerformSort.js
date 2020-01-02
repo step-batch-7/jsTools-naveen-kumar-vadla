@@ -2,14 +2,13 @@
 
 const { assert } = require('chai');
 const sinon = require('sinon');
-const { EventEmitter } = require('events');
 const { performSort } = require('../src/performSort');
 
 describe('performSort', () => {
   describe('Operation on file', () => {
     let fileReadStream, createReadStream, onSortCompletion;
     beforeEach(() => {
-      fileReadStream = new EventEmitter();
+      fileReadStream = { setEncoding: sinon.fake(), on: sinon.fake() };
       createReadStream = sinon.fake.returns(fileReadStream);
       onSortCompletion = sinon.fake();
     });
@@ -17,44 +16,59 @@ describe('performSort', () => {
       const userArgs = ['-k', '1', './docs/sampleFile.txt'];
       const sortedLines = '1 i\n2 h\na 9\na b\nb 8\nb c';
       performSort(userArgs, { createReadStream }, onSortCompletion);
-      fileReadStream.emit('data', 'a 9\n1 i\nb 8\n2 h\na b\nb c\n');
-      fileReadStream.emit('end');
+      fileReadStream.on.secondCall.args[1]('a 9\n1 i\nb 8\n2 h\na b\nb c\n');
+      fileReadStream.on.thirdCall.args[1]();
+      assert.strictEqual(fileReadStream.on.secondCall.args[0], 'data');
+      assert.strictEqual(fileReadStream.on.thirdCall.args[0], 'end');
+      assert.ok(fileReadStream.setEncoding.calledWith('utf8'));
       assert.ok(onSortCompletion.calledWith({ sortedLines, error: '' }));
     });
     it('Should give data sorted normally for absent field', () => {
       const userArgs = ['-k', '1', './docs/sampleFile.txt'];
       const sortedLines = 'g 2 w\nh 3 x\ni 4 y\nj 5 z';
       performSort(userArgs, { createReadStream }, onSortCompletion);
-      fileReadStream.emit('data', 'j 5 z\ni 4 y\ng 2 w\nh 3 x');
-      fileReadStream.emit('end');
+      fileReadStream.on.secondCall.args[1]('j 5 z\ni 4 y\ng 2 w\nh 3 x');
+      fileReadStream.on.thirdCall.args[1]();
+      assert.strictEqual(fileReadStream.on.secondCall.args[0], 'data');
+      assert.strictEqual(fileReadStream.on.thirdCall.args[0], 'end');
+      assert.ok(fileReadStream.setEncoding.calledWith('utf8'));
       assert.ok(onSortCompletion.calledWith({ sortedLines, error: '' }));
     });
     it('Should give empty string for empty file', () => {
       const userArgs = ['-k', '1', './docs/sampleFile.txt'];
       performSort(userArgs, { createReadStream }, onSortCompletion);
-      fileReadStream.emit('data', '');
-      fileReadStream.emit('end');
+      fileReadStream.on.secondCall.args[1]('');
+      fileReadStream.on.thirdCall.args[1]();
+      assert.strictEqual(fileReadStream.on.secondCall.args[0], 'data');
+      assert.strictEqual(fileReadStream.on.thirdCall.args[0], 'end');
+      assert.ok(fileReadStream.setEncoding.calledWith('utf8'));
       assert.ok(onSortCompletion.calledWith({ sortedLines: '', error: '' }));
     });
     it('Should give error message if file does not exist', () => {
       const userArgs = ['-k', '1', './docs/sampleFile.txt'];
       const error = 'sort: No such file or directory';
       performSort(userArgs, { createReadStream }, onSortCompletion);
-      fileReadStream.emit('error', { code: 'ENOENT' });
+      fileReadStream.on.firstCall.args[1]({ code: 'ENOENT' });
+      assert.strictEqual(fileReadStream.on.firstCall.args[0], 'error');
+      assert.ok(fileReadStream.setEncoding.calledWith('utf8'));
       assert.ok(onSortCompletion.calledWith({ sortedLines: '', error }));
     });
     it('Should give error message for directory as file', () => {
       const userArgs = ['-k', '1', './docs/'];
       const error = 'sort: Is a directory';
       performSort(userArgs, { createReadStream }, onSortCompletion);
-      fileReadStream.emit('error', { code: 'EISDIR' });
+      fileReadStream.on.firstCall.args[1]({ code: 'EISDIR' });
+      assert.strictEqual(fileReadStream.on.firstCall.args[0], 'error');
+      assert.ok(fileReadStream.setEncoding.calledWith('utf8'));
       assert.ok(onSortCompletion.calledWith({ sortedLines: '', error }));
     });
     it('Should give error message for file w/out permissions', () => {
       const userArgs = ['-k', '1', './docs/sampleFile.txt'];
       const error = 'sort: Permission denied';
       performSort(userArgs, { createReadStream }, onSortCompletion);
-      fileReadStream.emit('error', { code: 'EACCES' });
+      fileReadStream.on.firstCall.args[1]({ code: 'EACCES' });
+      assert.strictEqual(fileReadStream.on.firstCall.args[0], 'error');
+      assert.ok(fileReadStream.setEncoding.calledWith('utf8'));
       assert.ok(onSortCompletion.calledWith({ sortedLines: '', error }));
     });
     it('Should give error for invalid column number', () => {
@@ -67,7 +81,7 @@ describe('performSort', () => {
   describe('Operation on stdin', () => {
     let stdin, createStdinStream, onSortCompletion;
     beforeEach(() => {
-      stdin = new EventEmitter();
+      stdin = { setEncoding: sinon.fake(), on: sinon.fake() };
       createStdinStream = sinon.fake.returns(stdin);
       onSortCompletion = sinon.fake();
     });
@@ -75,23 +89,32 @@ describe('performSort', () => {
       const userArgs = ['-k', '1'];
       const sortedLines = '1 i\n2 h\na 9\na b\nb 8\nb c';
       performSort(userArgs, { createStdinStream }, onSortCompletion);
-      stdin.emit('data', 'a 9\n1 i\nb 8\n2 h\na b\nb c\n');
-      stdin.emit('end');
+      stdin.on.secondCall.args[1]('a 9\n1 i\nb 8\n2 h\na b\nb c\n');
+      stdin.on.thirdCall.args[1]();
+      assert.strictEqual(stdin.on.secondCall.args[0], 'data');
+      assert.strictEqual(stdin.on.thirdCall.args[0], 'end');
+      assert.ok(stdin.setEncoding.calledWith('utf8'));
       assert.ok(onSortCompletion.calledWith({ sortedLines, error: '' }));
     });
     it('Should give data sorted normally for absent field', () => {
       const userArgs = ['-k', '1'];
       const sortedLines = 'g 2 w\nh 3 x\ni 4 y\nj 5 z';
       performSort(userArgs, { createStdinStream }, onSortCompletion);
-      stdin.emit('data', 'j 5 z\ni 4 y\ng 2 w\nh 3 x');
-      stdin.emit('end');
+      stdin.on.secondCall.args[1]('j 5 z\ni 4 y\ng 2 w\nh 3 x');
+      stdin.on.thirdCall.args[1]();
+      assert.strictEqual(stdin.on.secondCall.args[0], 'data');
+      assert.strictEqual(stdin.on.thirdCall.args[0], 'end');
+      assert.ok(stdin.setEncoding.calledWith('utf8'));
       assert.ok(onSortCompletion.calledWith({ sortedLines, error: '' }));
     });
     it('Should give empty string for empty data', () => {
       const userArgs = ['-k', '1'];
       performSort(userArgs, { createStdinStream }, onSortCompletion);
-      stdin.emit('data', '');
-      stdin.emit('end');
+      stdin.on.secondCall.args[1]('');
+      stdin.on.thirdCall.args[1]();
+      assert.strictEqual(stdin.on.secondCall.args[0], 'data');
+      assert.strictEqual(stdin.on.thirdCall.args[0], 'end');
+      assert.ok(stdin.setEncoding.calledWith('utf8'));
       assert.ok(onSortCompletion.calledWith({ sortedLines: '', error: '' }));
     });
     it('Should give error for invalid column number', () => {
