@@ -57,12 +57,15 @@ describe('Sort', () => {
     });
   });
   describe('loadContentAndSort', () => {
+    let inputStream, onSortCompletion;
+    beforeEach(() => {
+      inputStream = new EventEmitter();
+      onSortCompletion = sinon.fake();
+    });
     it('Should give error if file is not present', () => {
       const columnNumber = 1;
       const delimiter = ' ';
       const fileName = './badFile.txt';
-      const inputStream = new EventEmitter();
-      const onSortCompletion = sinon.fake();
       const error = 'sort: No such file or directory';
       const sort = new Sort({ columnNumber, delimiter, fileName });
       sort.loadContentAndSort(inputStream, onSortCompletion);
@@ -73,8 +76,6 @@ describe('Sort', () => {
       const columnNumber = 1;
       const delimiter = ' ';
       const fileName = './docs';
-      const inputStream = new EventEmitter();
-      const onSortCompletion = sinon.fake();
       const error = 'sort: Is a directory';
       const sort = new Sort({ columnNumber, delimiter, fileName });
       sort.loadContentAndSort(inputStream, onSortCompletion);
@@ -85,8 +86,6 @@ describe('Sort', () => {
       const columnNumber = 1;
       const delimiter = ' ';
       const fileName = './docs/sampleFile.txt';
-      const inputStream = new EventEmitter();
-      const onSortCompletion = sinon.fake();
       const error = 'sort: Permission denied';
       const sort = new Sort({ columnNumber, delimiter, fileName });
       sort.loadContentAndSort(inputStream, onSortCompletion);
@@ -97,8 +96,6 @@ describe('Sort', () => {
       const columnNumber = 1;
       const delimiter = ' ';
       const fileName = './docs/sampleFile.txt';
-      const inputStream = new EventEmitter();
-      const onSortCompletion = sinon.fake();
       const sort = new Sort({ columnNumber, delimiter, fileName });
       sort.loadContentAndSort(inputStream, onSortCompletion);
       inputStream.emit('data', 'b a\na b');
@@ -111,8 +108,6 @@ describe('Sort', () => {
       const columnNumber = 5;
       const delimiter = ' ';
       const fileName = './docs/sampleFile.txt';
-      const inputStream = new EventEmitter();
-      const onSortCompletion = sinon.fake();
       const sort = new Sort({ columnNumber, delimiter, fileName });
       sort.loadContentAndSort(inputStream, onSortCompletion);
       inputStream.emit('data', 'b a\na b');
@@ -125,8 +120,6 @@ describe('Sort', () => {
       const columnNumber = 1;
       const delimiter = ' ';
       const fileName = './docs/sampleFile.txt';
-      const inputStream = new EventEmitter();
-      const onSortCompletion = sinon.fake();
       const sort = new Sort({ columnNumber, delimiter, fileName });
       sort.loadContentAndSort(inputStream, onSortCompletion);
       inputStream.emit('data', '');
