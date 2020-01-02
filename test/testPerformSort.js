@@ -89,6 +89,13 @@ describe('performSort', () => {
       performSort(userArgs, {}, onSortCompletion);
       assert.ok(onSortCompletion.calledWith({ sortedLines: '', error }));
     });
+    it('Should give error for column number 0', () => {
+      const userArgs = ['-k', '0', './docs/sampleFile.txt'];
+      let error = 'sort: 0 field in key specs: Undefined error: 0\n';
+      error = error + 'sort: -k 0: Invalid argument';
+      performSort(userArgs, {}, onSortCompletion);
+      assert.ok(onSortCompletion.calledWith({ sortedLines: '', error }));
+    });
   });
   describe('Operation on stdin', () => {
     let stdin, createStdinStream, onSortCompletion;
@@ -138,6 +145,13 @@ describe('performSort', () => {
     it('Should give error for invalid column number', () => {
       const userArgs = ['-k', '-1'];
       const error = 'sort: -k -1: Invalid argument';
+      performSort(userArgs, {}, onSortCompletion);
+      assert.ok(onSortCompletion.calledWith({ sortedLines: '', error }));
+    });
+    it('Should give error for column number 0', () => {
+      const userArgs = ['-k', '0', './docs/sampleFile.txt'];
+      let error = 'sort: 0 field in key specs: Undefined error: 0\n';
+      error = error + 'sort: -k 0: Invalid argument';
       performSort(userArgs, {}, onSortCompletion);
       assert.ok(onSortCompletion.calledWith({ sortedLines: '', error }));
     });

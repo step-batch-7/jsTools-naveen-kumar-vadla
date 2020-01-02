@@ -62,12 +62,11 @@ const parseUserArgs = userArgs => {
   const delimiter = ' ';
   const [, columnNumber, fileName] = userArgs;
   if (!isValidField(columnNumber)) {
-    return {
-      error: `sort: -k ${columnNumber}: Invalid argument`,
-      columnNumber,
-      fileName,
-      delimiter
-    };
+    let error = `sort: -k ${columnNumber}: Invalid argument`;
+    if (+columnNumber === +false) {
+      error = `sort: 0 field in key specs: Undefined error: 0\n${error}`;
+    }
+    return { error, columnNumber, fileName, delimiter };
   }
   return { error: '', fileName, columnNumber, delimiter };
 };

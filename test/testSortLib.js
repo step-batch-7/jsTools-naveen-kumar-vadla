@@ -174,6 +174,16 @@ describe('parseUserArgs', () => {
     const expected = { columnNumber, delimiter, fileName, error };
     assert.deepStrictEqual(actual, expected);
   });
+  it('Should give error for column number 0', () => {
+    const columnNumber = '0';
+    const fileName = './docs/sampleFile.txt';
+    const delimiter = ' ';
+    let error = 'sort: 0 field in key specs: Undefined error: 0\n';
+    error = error + 'sort: -k 0: Invalid argument';
+    const actual = parseUserArgs(['-k', '0', './docs/sampleFile.txt']);
+    const expected = { columnNumber, delimiter, fileName, error };
+    assert.deepStrictEqual(actual, expected);
+  });
 });
 describe('isValidField', () => {
   it('Should give true if given number is a positive integer', () => {
