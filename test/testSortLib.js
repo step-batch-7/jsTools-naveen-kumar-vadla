@@ -1,6 +1,8 @@
 'use strict';
 
 const { assert } = require('chai');
+const sinon = require('sinon');
+const { EventEmitter } = require('events');
 const {
   Sort,
   parseUserArgs,
@@ -54,6 +56,84 @@ describe('Sort', () => {
       assert.deepStrictEqual(actual, sortedLines);
     });
   });
+  describe('loadContentAndSort', () => {
+    it('Should give error if file is not present', () => {
+      const columnNumber = 1;
+      const delimiter = ' ';
+      const fileName = './badFile.txt';
+      const inputStream = new EventEmitter();
+      const onSortCompletion = sinon.fake();
+      const error = 'sort: No such file or directory';
+      const sort = new Sort({ columnNumber, delimiter, fileName });
+      sort.loadContentAndSort(inputStream, onSortCompletion);
+      inputStream.emit('error', { code: 'ENOENT' });
+      assert.ok(onSortCompletion.calledWith({ error, sortedLines: '' }));
+    });
+    it('Should give error if a directory given as fileName', () => {
+      const columnNumber = 1;
+      const delimiter = ' ';
+      const fileName = './docs';
+      const inputStream = new EventEmitter();
+      const onSortCompletion = sinon.fake();
+      const error = 'sort: Is a directory';
+      const sort = new Sort({ columnNumber, delimiter, fileName });
+      sort.loadContentAndSort(inputStream, onSortCompletion);
+      inputStream.emit('error', { code: 'EISDIR' });
+      assert.ok(onSortCompletion.calledWith({ error, sortedLines: '' }));
+    });
+    it('Should give error if file permissions are missing ', () => {
+      const columnNumber = 1;
+      const delimiter = ' ';
+      const fileName = './docs/sampleFile.txt';
+      const inputStream = new EventEmitter();
+      const onSortCompletion = sinon.fake();
+      const error = 'sort: Permission denied';
+      const sort = new Sort({ columnNumber, delimiter, fileName });
+      sort.loadContentAndSort(inputStream, onSortCompletion);
+      inputStream.emit('error', { code: 'EACCES' });
+      assert.ok(onSortCompletion.calledWith({ error, sortedLines: '' }));
+    });
+    it('Should give sorted lines for valid file and columnNumber', () => {
+      const columnNumber = 1;
+      const delimiter = ' ';
+      const fileName = './docs/sampleFile.txt';
+      const inputStream = new EventEmitter();
+      const onSortCompletion = sinon.fake();
+      const sort = new Sort({ columnNumber, delimiter, fileName });
+      sort.loadContentAndSort(inputStream, onSortCompletion);
+      inputStream.emit('data', 'b a\na b');
+      inputStream.emit('end');
+      assert.ok(
+        onSortCompletion.calledWith({ error: '', sortedLines: 'a b\nb a' })
+      );
+    });
+    it('Should give normally sorted data for absent columnNumber', () => {
+      const columnNumber = 5;
+      const delimiter = ' ';
+      const fileName = './docs/sampleFile.txt';
+      const inputStream = new EventEmitter();
+      const onSortCompletion = sinon.fake();
+      const sort = new Sort({ columnNumber, delimiter, fileName });
+      sort.loadContentAndSort(inputStream, onSortCompletion);
+      inputStream.emit('data', 'b a\na b');
+      inputStream.emit('end');
+      assert.ok(
+        onSortCompletion.calledWith({ error: '', sortedLines: 'a b\nb a' })
+      );
+    });
+    it('Should give empty string for empty content', () => {
+      const columnNumber = 1;
+      const delimiter = ' ';
+      const fileName = './docs/sampleFile.txt';
+      const inputStream = new EventEmitter();
+      const onSortCompletion = sinon.fake();
+      const sort = new Sort({ columnNumber, delimiter, fileName });
+      sort.loadContentAndSort(inputStream, onSortCompletion);
+      inputStream.emit('data', '');
+      inputStream.emit('end');
+      assert.ok(onSortCompletion.calledWith({ error: '', sortedLines: '' }));
+    });
+  });
 });
 describe('parseUserArgs', () => {
   it('Should give no error for valid columnNumber', () => {
@@ -95,7 +175,6 @@ describe('isValidField', () => {
     assert.notOk(isValidField('a'));
   });
 });
-
 describe('getErrorMessage', () => {
   it('Should error for given error code', () => {
     assert.strictEqual(getErrorMessage('EISDIR'), 'sort: Is a directory');
