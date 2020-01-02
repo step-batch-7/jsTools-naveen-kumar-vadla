@@ -20,6 +20,8 @@ describe('performSort', () => {
       fileReadStream.on.thirdCall.args[1]();
       assert.strictEqual(fileReadStream.on.secondCall.args[0], 'data');
       assert.strictEqual(fileReadStream.on.thirdCall.args[0], 'end');
+      assert.strictEqual(fileReadStream.setEncoding.callCount, 1);
+      assert.strictEqual(fileReadStream.on.callCount, 3);
       assert.ok(fileReadStream.setEncoding.calledWith('utf8'));
       assert.ok(onSortCompletion.calledWith({ sortedLines, error: '' }));
     });
@@ -31,6 +33,8 @@ describe('performSort', () => {
       fileReadStream.on.thirdCall.args[1]();
       assert.strictEqual(fileReadStream.on.secondCall.args[0], 'data');
       assert.strictEqual(fileReadStream.on.thirdCall.args[0], 'end');
+      assert.strictEqual(fileReadStream.setEncoding.callCount, 1);
+      assert.strictEqual(fileReadStream.on.callCount, 3);
       assert.ok(fileReadStream.setEncoding.calledWith('utf8'));
       assert.ok(onSortCompletion.calledWith({ sortedLines, error: '' }));
     });
@@ -41,6 +45,8 @@ describe('performSort', () => {
       fileReadStream.on.thirdCall.args[1]();
       assert.strictEqual(fileReadStream.on.secondCall.args[0], 'data');
       assert.strictEqual(fileReadStream.on.thirdCall.args[0], 'end');
+      assert.strictEqual(fileReadStream.setEncoding.callCount, 1);
+      assert.strictEqual(fileReadStream.on.callCount, 3);
       assert.ok(fileReadStream.setEncoding.calledWith('utf8'));
       assert.ok(onSortCompletion.calledWith({ sortedLines: '', error: '' }));
     });
@@ -50,6 +56,8 @@ describe('performSort', () => {
       performSort(userArgs, { createReadStream }, onSortCompletion);
       fileReadStream.on.firstCall.args[1]({ code: 'ENOENT' });
       assert.strictEqual(fileReadStream.on.firstCall.args[0], 'error');
+      assert.strictEqual(fileReadStream.setEncoding.callCount, 1);
+      assert.strictEqual(fileReadStream.on.callCount, 3);
       assert.ok(fileReadStream.setEncoding.calledWith('utf8'));
       assert.ok(onSortCompletion.calledWith({ sortedLines: '', error }));
     });
@@ -59,6 +67,8 @@ describe('performSort', () => {
       performSort(userArgs, { createReadStream }, onSortCompletion);
       fileReadStream.on.firstCall.args[1]({ code: 'EISDIR' });
       assert.strictEqual(fileReadStream.on.firstCall.args[0], 'error');
+      assert.strictEqual(fileReadStream.setEncoding.callCount, 1);
+      assert.strictEqual(fileReadStream.on.callCount, 3);
       assert.ok(fileReadStream.setEncoding.calledWith('utf8'));
       assert.ok(onSortCompletion.calledWith({ sortedLines: '', error }));
     });
@@ -68,6 +78,8 @@ describe('performSort', () => {
       performSort(userArgs, { createReadStream }, onSortCompletion);
       fileReadStream.on.firstCall.args[1]({ code: 'EACCES' });
       assert.strictEqual(fileReadStream.on.firstCall.args[0], 'error');
+      assert.strictEqual(fileReadStream.setEncoding.callCount, 1);
+      assert.strictEqual(fileReadStream.on.callCount, 3);
       assert.ok(fileReadStream.setEncoding.calledWith('utf8'));
       assert.ok(onSortCompletion.calledWith({ sortedLines: '', error }));
     });
@@ -93,6 +105,8 @@ describe('performSort', () => {
       stdin.on.thirdCall.args[1]();
       assert.strictEqual(stdin.on.secondCall.args[0], 'data');
       assert.strictEqual(stdin.on.thirdCall.args[0], 'end');
+      assert.strictEqual(stdin.setEncoding.callCount, 1);
+      assert.strictEqual(stdin.on.callCount, 3);
       assert.ok(stdin.setEncoding.calledWith('utf8'));
       assert.ok(onSortCompletion.calledWith({ sortedLines, error: '' }));
     });
@@ -104,6 +118,8 @@ describe('performSort', () => {
       stdin.on.thirdCall.args[1]();
       assert.strictEqual(stdin.on.secondCall.args[0], 'data');
       assert.strictEqual(stdin.on.thirdCall.args[0], 'end');
+      assert.strictEqual(stdin.setEncoding.callCount, 1);
+      assert.strictEqual(stdin.on.callCount, 3);
       assert.ok(stdin.setEncoding.calledWith('utf8'));
       assert.ok(onSortCompletion.calledWith({ sortedLines, error: '' }));
     });
@@ -114,6 +130,8 @@ describe('performSort', () => {
       stdin.on.thirdCall.args[1]();
       assert.strictEqual(stdin.on.secondCall.args[0], 'data');
       assert.strictEqual(stdin.on.thirdCall.args[0], 'end');
+      assert.strictEqual(stdin.setEncoding.callCount, 1);
+      assert.strictEqual(stdin.on.callCount, 3);
       assert.ok(stdin.setEncoding.calledWith('utf8'));
       assert.ok(onSortCompletion.calledWith({ sortedLines: '', error: '' }));
     });

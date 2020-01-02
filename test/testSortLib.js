@@ -14,23 +14,17 @@ describe('Sort', () => {
     it('Should give 0 if field of given rows are equal', () => {
       const parsedUserOptions = { columnNumber: 1 };
       const sort = new Sort(parsedUserOptions);
-      const actual = sort.compareRows(['a b'], ['a b']);
-      const expected = 0;
-      assert.strictEqual(actual, expected);
+      assert.strictEqual(sort.compareRows(['a b'], ['a b']), 0);
     });
     it('Should give 1 if field of given row1 is greater', () => {
       const parsedUserOptions = { columnNumber: 1 };
       const sort = new Sort(parsedUserOptions);
-      const actual = sort.compareRows(['c b'], ['a b']);
-      const expected = 1;
-      assert.strictEqual(actual, expected);
+      assert.strictEqual(sort.compareRows(['c b'], ['a b']), 1);
     });
     it('Should give -1 if field of given row2 is greater', () => {
       const parsedUserOptions = { columnNumber: 1 };
       const sort = new Sort(parsedUserOptions);
-      const actual = sort.compareRows(['a b'], ['c b']);
-      const expected = -1;
-      assert.strictEqual(actual, expected);
+      assert.strictEqual(sort.compareRows(['a b'], ['c b']), -1);
     });
   });
   describe('sortLines', () => {
@@ -40,9 +34,8 @@ describe('Sort', () => {
       const fileName = './docs/sampleFile.txt';
       const sort = new Sort({ columnNumber, delimiter, fileName });
       const lines = 'a 9\nb 8\n2 h\n1 i\na b\nb c';
-      const actual = sort.sortLines(lines);
       const sortedLines = 'b 8\na 9\na b\nb c\n2 h\n1 i';
-      assert.deepStrictEqual(actual, sortedLines);
+      assert.deepStrictEqual(sort.sortLines(lines), sortedLines);
     });
     it('Should give data sorted normally for absent field', () => {
       const columnNumber = '5';
@@ -50,9 +43,8 @@ describe('Sort', () => {
       const fileName = './docs/sampleFile.txt';
       const sort = new Sort({ columnNumber, delimiter, fileName });
       const lines = 'a 9\nb 8\n2 h\n1 i\na b\nb c';
-      const actual = sort.sortLines(lines);
       const sortedLines = '1 i\n2 h\na 9\na b\nb 8\nb c';
-      assert.deepStrictEqual(actual, sortedLines);
+      assert.deepStrictEqual(sort.sortLines(lines), sortedLines);
     });
   });
   describe('loadContentAndSort', () => {
@@ -70,6 +62,8 @@ describe('Sort', () => {
       sort.loadContentAndSort(inputStream, onSortCompletion);
       inputStream.on.firstCall.args[1]({ code: 'ENOENT' });
       assert.strictEqual(inputStream.on.firstCall.args[0], 'error');
+      assert.strictEqual(inputStream.setEncoding.callCount, 1);
+      assert.strictEqual(inputStream.on.callCount, 3);
       assert.ok(inputStream.setEncoding.calledWith('utf8'));
       assert.ok(onSortCompletion.calledWith({ error, sortedLines: '' }));
     });
@@ -82,6 +76,8 @@ describe('Sort', () => {
       sort.loadContentAndSort(inputStream, onSortCompletion);
       inputStream.on.firstCall.args[1]({ code: 'EISDIR' });
       assert.strictEqual(inputStream.on.firstCall.args[0], 'error');
+      assert.strictEqual(inputStream.setEncoding.callCount, 1);
+      assert.strictEqual(inputStream.on.callCount, 3);
       assert.ok(inputStream.setEncoding.calledWith('utf8'));
       assert.ok(onSortCompletion.calledWith({ error, sortedLines: '' }));
     });
@@ -94,6 +90,8 @@ describe('Sort', () => {
       sort.loadContentAndSort(inputStream, onSortCompletion);
       inputStream.on.firstCall.args[1]({ code: 'EACCES' });
       assert.strictEqual(inputStream.on.firstCall.args[0], 'error');
+      assert.strictEqual(inputStream.setEncoding.callCount, 1);
+      assert.strictEqual(inputStream.on.callCount, 3);
       assert.ok(inputStream.setEncoding.calledWith('utf8'));
       assert.ok(onSortCompletion.calledWith({ error, sortedLines: '' }));
     });
@@ -107,6 +105,8 @@ describe('Sort', () => {
       inputStream.on.thirdCall.args[1]();
       assert.strictEqual(inputStream.on.secondCall.args[0], 'data');
       assert.strictEqual(inputStream.on.thirdCall.args[0], 'end');
+      assert.strictEqual(inputStream.setEncoding.callCount, 1);
+      assert.strictEqual(inputStream.on.callCount, 3);
       assert.ok(inputStream.setEncoding.calledWith('utf8'));
       assert.ok(
         onSortCompletion.calledWith({ error: '', sortedLines: 'a b\nb a' })
@@ -122,6 +122,8 @@ describe('Sort', () => {
       inputStream.on.thirdCall.args[1]();
       assert.strictEqual(inputStream.on.secondCall.args[0], 'data');
       assert.strictEqual(inputStream.on.thirdCall.args[0], 'end');
+      assert.strictEqual(inputStream.setEncoding.callCount, 1);
+      assert.strictEqual(inputStream.on.callCount, 3);
       assert.ok(inputStream.setEncoding.calledWith('utf8'));
       assert.ok(
         onSortCompletion.calledWith({ error: '', sortedLines: 'a b\nb a' })
@@ -137,6 +139,8 @@ describe('Sort', () => {
       inputStream.on.thirdCall.args[1]();
       assert.strictEqual(inputStream.on.secondCall.args[0], 'data');
       assert.strictEqual(inputStream.on.thirdCall.args[0], 'end');
+      assert.strictEqual(inputStream.setEncoding.callCount, 1);
+      assert.strictEqual(inputStream.on.callCount, 3);
       assert.ok(inputStream.setEncoding.calledWith('utf8'));
       assert.ok(onSortCompletion.calledWith({ error: '', sortedLines: '' }));
     });
@@ -144,29 +148,29 @@ describe('Sort', () => {
 });
 describe('parseUserArgs', () => {
   it('Should give no error for valid columnNumber', () => {
-    const actual = parseUserArgs(['-k', '1', './docs/sampleFile.txt']);
     const columnNumber = '1';
     const delimiter = ' ';
     const fileName = './docs/sampleFile.txt';
     const error = '';
+    const actual = parseUserArgs(['-k', '1', './docs/sampleFile.txt']);
     const expected = { columnNumber, delimiter, fileName, error };
     assert.deepStrictEqual(actual, expected);
   });
   it('Should give error if given column number is not a number', () => {
-    const actual = parseUserArgs(['-k', 'a', './docs/sampleFile.txt']);
     const columnNumber = 'a';
     const fileName = './docs/sampleFile.txt';
     const delimiter = ' ';
     const error = 'sort: -k a: Invalid argument';
+    const actual = parseUserArgs(['-k', 'a', './docs/sampleFile.txt']);
     const expected = { columnNumber, delimiter, fileName, error };
     assert.deepStrictEqual(actual, expected);
   });
   it('Should give error if given column number is a negative number', () => {
-    const actual = parseUserArgs(['-k', '-1', './docs/sampleFile.txt']);
     const columnNumber = '-1';
     const fileName = './docs/sampleFile.txt';
     const delimiter = ' ';
     const error = 'sort: -k -1: Invalid argument';
+    const actual = parseUserArgs(['-k', '-1', './docs/sampleFile.txt']);
     const expected = { columnNumber, delimiter, fileName, error };
     assert.deepStrictEqual(actual, expected);
   });
