@@ -8,7 +8,7 @@
     "test": "test"
   },
   "scripts": {
-    "test": "mocha && eslint src test",
+    "test": "mocha && npm run linterTest",
     "linterTest": "npm run getLinter && eslint src test",
     "appTest": "./runAppTests.sh ./appTests/*.test",
     "allTests": "npm test && npm run appTest",
