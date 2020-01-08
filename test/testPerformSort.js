@@ -7,7 +7,6 @@ const {
   loadContentAndSort,
   getErrorMessage
 } = require('../src/performSort');
-const { Sort } = require('../src/sortLib');
 
 describe('performSort', () => {
   describe('Operation on file', () => {
@@ -169,12 +168,8 @@ describe('loadContentAndSort', () => {
     onSortCompletion = sinon.fake();
   });
   it('Should give error if file is not present', () => {
-    const columnNumber = 1;
-    const delimiter = ' ';
-    const fileName = './badFile.txt';
     const error = 'sort: No such file or directory';
-    const sort = new Sort({ columnNumber, delimiter, fileName });
-    loadContentAndSort(inputStream, onSortCompletion, sort);
+    loadContentAndSort(inputStream, onSortCompletion);
     inputStream.on.firstCall.args[1]({ code: 'ENOENT' });
     assert.strictEqual(inputStream.on.firstCall.args[0], 'error');
     assert.strictEqual(inputStream.setEncoding.callCount, 1);
@@ -183,12 +178,8 @@ describe('loadContentAndSort', () => {
     assert.ok(onSortCompletion.calledWith({ error, sortedLines: '' }));
   });
   it('Should give error if a directory given as fileName', () => {
-    const columnNumber = 1;
-    const delimiter = ' ';
-    const fileName = './docs';
     const error = 'sort: Is a directory';
-    const sort = new Sort({ columnNumber, delimiter, fileName });
-    loadContentAndSort(inputStream, onSortCompletion, sort);
+    loadContentAndSort(inputStream, onSortCompletion);
     inputStream.on.firstCall.args[1]({ code: 'EISDIR' });
     assert.strictEqual(inputStream.on.firstCall.args[0], 'error');
     assert.strictEqual(inputStream.setEncoding.callCount, 1);
@@ -197,12 +188,8 @@ describe('loadContentAndSort', () => {
     assert.ok(onSortCompletion.calledWith({ error, sortedLines: '' }));
   });
   it('Should give error if file permissions are missing ', () => {
-    const columnNumber = 1;
-    const delimiter = ' ';
-    const fileName = './docs/sampleFile.txt';
     const error = 'sort: Permission denied';
-    const sort = new Sort({ columnNumber, delimiter, fileName });
-    loadContentAndSort(inputStream, onSortCompletion, sort);
+    loadContentAndSort(inputStream, onSortCompletion);
     inputStream.on.firstCall.args[1]({ code: 'EACCES' });
     assert.strictEqual(inputStream.on.firstCall.args[0], 'error');
     assert.strictEqual(inputStream.setEncoding.callCount, 1);
@@ -214,7 +201,9 @@ describe('loadContentAndSort', () => {
     const columnNumber = 1;
     const delimiter = ' ';
     const fileName = './docs/sampleFile.txt';
-    const sort = new Sort({ columnNumber, delimiter, fileName });
+    const sortedLines = 'a b\nb a';
+    const sortLines = sinon.fake.returns(sortedLines);
+    const sort = { columnNumber, delimiter, fileName, sortLines };
     loadContentAndSort(inputStream, onSortCompletion, sort);
     inputStream.on.secondCall.args[1]('b a\na b');
     inputStream.on.thirdCall.args[1]();
@@ -223,15 +212,15 @@ describe('loadContentAndSort', () => {
     assert.strictEqual(inputStream.setEncoding.callCount, 1);
     assert.strictEqual(inputStream.on.callCount, 3);
     assert.ok(inputStream.setEncoding.calledWith('utf8'));
-    assert.ok(
-      onSortCompletion.calledWith({ error: '', sortedLines: 'a b\nb a' })
-    );
+    assert.ok(onSortCompletion.calledWith({ error: '', sortedLines }));
   });
   it('Should give normally sorted data for absent columnNumber', () => {
     const columnNumber = 5;
     const delimiter = ' ';
     const fileName = './docs/sampleFile.txt';
-    const sort = new Sort({ columnNumber, delimiter, fileName });
+    const sortedLines = 'a b\nb a';
+    const sortLines = sinon.fake.returns(sortedLines);
+    const sort = { columnNumber, delimiter, fileName, sortLines };
     loadContentAndSort(inputStream, onSortCompletion, sort);
     inputStream.on.secondCall.args[1]('b a\na b');
     inputStream.on.thirdCall.args[1]();
@@ -240,15 +229,14 @@ describe('loadContentAndSort', () => {
     assert.strictEqual(inputStream.setEncoding.callCount, 1);
     assert.strictEqual(inputStream.on.callCount, 3);
     assert.ok(inputStream.setEncoding.calledWith('utf8'));
-    assert.ok(
-      onSortCompletion.calledWith({ error: '', sortedLines: 'a b\nb a' })
-    );
+    assert.ok(onSortCompletion.calledWith({ error: '', sortedLines }));
   });
   it('Should give empty string for empty content', () => {
     const columnNumber = 1;
     const delimiter = ' ';
     const fileName = './docs/sampleFile.txt';
-    const sort = new Sort({ columnNumber, delimiter, fileName });
+    const sortLines = sinon.fake.returns('');
+    const sort = { columnNumber, delimiter, fileName, sortLines };
     loadContentAndSort(inputStream, onSortCompletion, sort);
     inputStream.on.secondCall.args[1]('');
     inputStream.on.thirdCall.args[1]();

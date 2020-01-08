@@ -17,6 +17,7 @@ const loadContentAndSort = (inputStream, onSortCompletion, sort) => {
     onSortCompletion({ sortedLines, error: '' });
   });
 };
+
 const getErrorMessage = errorCode => {
   const errorMessages = {};
   errorMessages.ENOENT = 'sort: No such file or directory';
