@@ -28,28 +28,6 @@ class Sort {
     const sortedLines = rows.map(row => row.join(this.delimiter));
     return sortedLines.join('\n');
   }
-  loadContentAndSort(inputStream, onSortCompletion) {
-    let content = '';
-    inputStream.setEncoding('utf8');
-    inputStream.on('error', error => {
-      const streamError = this.getErrorMessage(error.code);
-      onSortCompletion({ sortedLines: '', error: streamError });
-    });
-    inputStream.on('data', line => {
-      content += line;
-    });
-    inputStream.on('end', () => {
-      const sortedLines = this.sortLines(content, onSortCompletion);
-      onSortCompletion({ sortedLines, error: '' });
-    });
-  }
-  getErrorMessage(errorCode) {
-    this.errorMessages = {};
-    this.errorMessages.ENOENT = 'sort: No such file or directory';
-    this.errorMessages.EISDIR = 'sort: Is a directory';
-    this.errorMessages.EACCES = 'sort: Permission denied';
-    return this.errorMessages[errorCode];
-  }
 }
 
 const isValidField = columnNumber => {

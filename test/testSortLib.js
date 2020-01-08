@@ -1,7 +1,6 @@
 'use strict';
 
 const { assert } = require('chai');
-const sinon = require('sinon');
 const { Sort, parseUserArgs, isValidField } = require('../src/sortLib');
 
 describe('Sort', () => {
@@ -40,125 +39,6 @@ describe('Sort', () => {
       const lines = 'a 9\nb 8\n2 h\n1 i\na b\nb c';
       const sortedLines = '1 i\n2 h\na 9\na b\nb 8\nb c';
       assert.deepStrictEqual(sort.sortLines(lines), sortedLines);
-    });
-  });
-  describe('loadContentAndSort', () => {
-    let inputStream, onSortCompletion;
-    beforeEach(() => {
-      inputStream = { setEncoding: sinon.fake(), on: sinon.fake() };
-      onSortCompletion = sinon.fake();
-    });
-    it('Should give error if file is not present', () => {
-      const columnNumber = 1;
-      const delimiter = ' ';
-      const fileName = './badFile.txt';
-      const error = 'sort: No such file or directory';
-      const sort = new Sort({ columnNumber, delimiter, fileName });
-      sort.loadContentAndSort(inputStream, onSortCompletion);
-      inputStream.on.firstCall.args[1]({ code: 'ENOENT' });
-      assert.strictEqual(inputStream.on.firstCall.args[0], 'error');
-      assert.strictEqual(inputStream.setEncoding.callCount, 1);
-      assert.strictEqual(inputStream.on.callCount, 3);
-      assert.ok(inputStream.setEncoding.calledWith('utf8'));
-      assert.ok(onSortCompletion.calledWith({ error, sortedLines: '' }));
-    });
-    it('Should give error if a directory given as fileName', () => {
-      const columnNumber = 1;
-      const delimiter = ' ';
-      const fileName = './docs';
-      const error = 'sort: Is a directory';
-      const sort = new Sort({ columnNumber, delimiter, fileName });
-      sort.loadContentAndSort(inputStream, onSortCompletion);
-      inputStream.on.firstCall.args[1]({ code: 'EISDIR' });
-      assert.strictEqual(inputStream.on.firstCall.args[0], 'error');
-      assert.strictEqual(inputStream.setEncoding.callCount, 1);
-      assert.strictEqual(inputStream.on.callCount, 3);
-      assert.ok(inputStream.setEncoding.calledWith('utf8'));
-      assert.ok(onSortCompletion.calledWith({ error, sortedLines: '' }));
-    });
-    it('Should give error if file permissions are missing ', () => {
-      const columnNumber = 1;
-      const delimiter = ' ';
-      const fileName = './docs/sampleFile.txt';
-      const error = 'sort: Permission denied';
-      const sort = new Sort({ columnNumber, delimiter, fileName });
-      sort.loadContentAndSort(inputStream, onSortCompletion);
-      inputStream.on.firstCall.args[1]({ code: 'EACCES' });
-      assert.strictEqual(inputStream.on.firstCall.args[0], 'error');
-      assert.strictEqual(inputStream.setEncoding.callCount, 1);
-      assert.strictEqual(inputStream.on.callCount, 3);
-      assert.ok(inputStream.setEncoding.calledWith('utf8'));
-      assert.ok(onSortCompletion.calledWith({ error, sortedLines: '' }));
-    });
-    it('Should give sorted lines for valid file and columnNumber', () => {
-      const columnNumber = 1;
-      const delimiter = ' ';
-      const fileName = './docs/sampleFile.txt';
-      const sort = new Sort({ columnNumber, delimiter, fileName });
-      sort.loadContentAndSort(inputStream, onSortCompletion);
-      inputStream.on.secondCall.args[1]('b a\na b');
-      inputStream.on.thirdCall.args[1]();
-      assert.strictEqual(inputStream.on.secondCall.args[0], 'data');
-      assert.strictEqual(inputStream.on.thirdCall.args[0], 'end');
-      assert.strictEqual(inputStream.setEncoding.callCount, 1);
-      assert.strictEqual(inputStream.on.callCount, 3);
-      assert.ok(inputStream.setEncoding.calledWith('utf8'));
-      assert.ok(
-        onSortCompletion.calledWith({ error: '', sortedLines: 'a b\nb a' })
-      );
-    });
-    it('Should give normally sorted data for absent columnNumber', () => {
-      const columnNumber = 5;
-      const delimiter = ' ';
-      const fileName = './docs/sampleFile.txt';
-      const sort = new Sort({ columnNumber, delimiter, fileName });
-      sort.loadContentAndSort(inputStream, onSortCompletion);
-      inputStream.on.secondCall.args[1]('b a\na b');
-      inputStream.on.thirdCall.args[1]();
-      assert.strictEqual(inputStream.on.secondCall.args[0], 'data');
-      assert.strictEqual(inputStream.on.thirdCall.args[0], 'end');
-      assert.strictEqual(inputStream.setEncoding.callCount, 1);
-      assert.strictEqual(inputStream.on.callCount, 3);
-      assert.ok(inputStream.setEncoding.calledWith('utf8'));
-      assert.ok(
-        onSortCompletion.calledWith({ error: '', sortedLines: 'a b\nb a' })
-      );
-    });
-    it('Should give empty string for empty content', () => {
-      const columnNumber = 1;
-      const delimiter = ' ';
-      const fileName = './docs/sampleFile.txt';
-      const sort = new Sort({ columnNumber, delimiter, fileName });
-      sort.loadContentAndSort(inputStream, onSortCompletion);
-      inputStream.on.secondCall.args[1]('');
-      inputStream.on.thirdCall.args[1]();
-      assert.strictEqual(inputStream.on.secondCall.args[0], 'data');
-      assert.strictEqual(inputStream.on.thirdCall.args[0], 'end');
-      assert.strictEqual(inputStream.setEncoding.callCount, 1);
-      assert.strictEqual(inputStream.on.callCount, 3);
-      assert.ok(inputStream.setEncoding.calledWith('utf8'));
-      assert.ok(onSortCompletion.calledWith({ error: '', sortedLines: '' }));
-    });
-  });
-  describe('getErrorMessage', () => {
-    it('Should error for given error code EISDIR', () => {
-      const sort = new Sort({});
-      const error = 'sort: Is a directory';
-      assert.strictEqual(sort.getErrorMessage('EISDIR'), error);
-    });
-    it('Should error for given error code EISDIR', () => {
-      const sort = new Sort({});
-      const error = 'sort: Permission denied';
-      assert.strictEqual(sort.getErrorMessage('EACCES'), error);
-    });
-    it('Should error for given error code EISDIR', () => {
-      const sort = new Sort({});
-      const error = 'sort: No such file or directory';
-      assert.strictEqual(sort.getErrorMessage('ENOENT'), error);
-    });
-    it('Should give undefined for if error code is not present', () => {
-      const sort = new Sort({});
-      assert.isUndefined(sort.getErrorMessage('ERROR'));
     });
   });
 });
